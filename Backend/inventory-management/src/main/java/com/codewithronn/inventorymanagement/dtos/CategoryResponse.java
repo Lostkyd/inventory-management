@@ -1,4 +1,4 @@
-package com.codewithronn.inventorymanagement.io;
+package com.codewithronn.inventorymanagement.dtos.response;
 
 import lombok.Builder;
 import lombok.Data;

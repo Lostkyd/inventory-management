@@ -1,4 +1,4 @@
-package com.codewithronn.inventorymanagement.io;
+package com.codewithronn.inventorymanagement.dtos.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

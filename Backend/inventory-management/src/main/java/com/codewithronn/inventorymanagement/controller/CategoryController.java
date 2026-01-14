@@ -1,7 +1,7 @@
 package com.codewithronn.inventorymanagement.controller;
 
-import com.codewithronn.inventorymanagement.io.CategoryRequest;
-import com.codewithronn.inventorymanagement.io.CategoryResponse;
+import com.codewithronn.inventorymanagement.dtos.request.CategoryRequest;
+import com.codewithronn.inventorymanagement.dtos.response.CategoryResponse;
 import com.codewithronn.inventorymanagement.service.CategoryServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/categories")
@@ -17,10 +18,13 @@ public class CategoryController {
 
     private final CategoryServices categoryServices;
 
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponse addCategory(@RequestBody CategoryRequest request){
-        return categoryServices.add(request);
+    public CategoryResponse addCategory(
+            @RequestPart("data") CategoryRequest request,
+            @RequestPart("file") MultipartFile file) {
+
+        return categoryServices.add(request, file);
     }
 
     @GetMapping

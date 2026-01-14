@@ -27,6 +27,7 @@ public class Category {
     private String categoryDescription;
     private String bgColor;
     private String imgUrl;
+    public String publicId;
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
