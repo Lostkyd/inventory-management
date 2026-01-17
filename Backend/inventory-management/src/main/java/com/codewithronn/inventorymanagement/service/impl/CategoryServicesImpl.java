@@ -55,7 +55,6 @@ public class CategoryServicesImpl implements CategoryServices {
                 .categoryId(cat.getCategoryId())
                 .categoryName(cat.getCategoryName())
                 .categoryDescription(cat.getCategoryDescription())
-                .bgColor(cat.getBgColor())
                 .imgUrl(cat.getImgUrl())
                 .updatedAt(cat.getUpdatedAt())
                 .createdAt(cat.getCreatedAt())
@@ -67,7 +66,6 @@ public class CategoryServicesImpl implements CategoryServices {
                 .categoryId(UUID.randomUUID().toString())
                 .categoryName(request.getCategoryName())
                 .categoryDescription(request.getCategoryDescription())
-                .bgColor(request.getBgColor())
                 .build();
     }
 }

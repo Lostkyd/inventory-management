@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.codewithronn.inventorymanagement.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,26 +17,51 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class CloudinaryServices {
+
     private final Cloudinary cloudinary;
-    
+
+    private static final List<String> ALLOWED_CONTENT_TYPES = Arrays.asList(
+            "image/jpeg",
+            "image/png"
+    );
+
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
     public Map uploadFile(MultipartFile file, String folder) {
+        validateFile(file);
         try {
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), 
-                ObjectUtils.asMap(
-                    "resource_type", "auto",
-                    "folder", folder
-                ));
-            return uploadResult;
+            return cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "auto",
+                            "folder", folder
+                    )
+            );
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file to Cloudinary: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to upload file: " + e.getMessage(), e);
         }
     }
-    
-    public Map deleteFile(String publicId) {
+
+    public void deleteFile(String publicId) {
         try {
-            return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete file from Cloudinary: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to delete file: " + e.getMessage(), e);
+        }
+    }
+
+    private void validateFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File cannot be empty");
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("File size exceeds maximum limit of 10MB");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+            throw new IllegalArgumentException("File type not supported. Allowed types: " + ALLOWED_CONTENT_TYPES);
         }
     }
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.codewithronn.inventorymanagement.service.impl;
 
 import com.codewithronn.inventorymanagement.dtos.response.FileUploadResponse;
@@ -28,21 +24,22 @@ public class FileUploadServicesImpl implements FileUploadServices{
     private final CloudinaryServices cloudinaryServices;
     private final FileUploadRepository fileUploadRepository;
     private static final String DEFAULT_FOLDER = "inventory-file";
-    
+
     @Override
     public FileUploadResponse upload(MultipartFile file) {
         return upload(file, DEFAULT_FOLDER);
     }
-    
+
     @Override
     public FileUploadResponse upload(MultipartFile file, String folder) {
-       
         if (file.isEmpty()) {
             throw new RuntimeException("File is empty");
         }
-        
+
+        // Upload to Cloudinary
         Map uploadResult = cloudinaryServices.uploadFile(file, folder);
-        
+
+        // Create entity
         FileUpload fileUpload = new FileUpload();
         fileUpload.setFilename(file.getOriginalFilename());
         fileUpload.setCloudinaryUrl(uploadResult.get("secure_url").toString());
@@ -50,9 +47,10 @@ public class FileUploadServicesImpl implements FileUploadServices{
         fileUpload.setContentType(file.getContentType());
         fileUpload.setFileSize(file.getSize());
         fileUpload.setResourceType(uploadResult.get("resource_type").toString());
-        
+
         FileUpload savedFile = fileUploadRepository.save(fileUpload);
-        
+
+        // Return response
         return mapToResponse(savedFile);
     }
 
@@ -72,12 +70,10 @@ public class FileUploadServicesImpl implements FileUploadServices{
 
     @Override
     public void delete(Long fileId) {
-        
         FileUpload fileUpload = fileUploadRepository.findById(fileId)
                 .orElseThrow(() -> new RuntimeException("File not found with id: " + fileId));
-        
+
         cloudinaryServices.deleteFile(fileUpload.getPublicId());
-        
         fileUploadRepository.delete(fileUpload);
     }
 
@@ -87,11 +83,9 @@ public class FileUploadServicesImpl implements FileUploadServices{
                 .orElseThrow(() -> new RuntimeException("File not found with publicId: " + publicId));
 
         cloudinaryServices.deleteFile(fileUpload.getPublicId());
-
         fileUploadRepository.delete(fileUpload);
     }
 
-    
     private FileUploadResponse mapToResponse(FileUpload fileEntity) {
         return FileUploadResponse.builder()
                 .id(fileEntity.getId())

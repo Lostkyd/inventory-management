@@ -8,7 +8,6 @@ public class DotEnvLoader {
     private static final Logger logger = LoggerFactory.getLogger(DotEnvLoader.class);
 
     static {
-        // Only load .env in development, not in production
         String activeProfile = System.getProperty("spring.profiles.active");
         
         if (activeProfile == null || activeProfile.isEmpty() || "dev".equals(activeProfile)) {

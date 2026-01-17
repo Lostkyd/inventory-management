@@ -25,7 +25,6 @@ public class Category {
     @Column(unique = true)
     private String categoryName;
     private String categoryDescription;
-    private String bgColor;
     private String imgUrl;
     public String publicId;
     @CreationTimestamp
