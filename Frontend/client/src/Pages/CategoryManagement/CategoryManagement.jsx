@@ -5,20 +5,36 @@ import './CategoryManagement.css'
 
 const CategoryManagement = () => {
     const [showModal, setShowModal] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
 
     return (
         <div className="category-container text-light">
-
             <div className="category-header">
-                <button
-                    className="add-category-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    Add Category
-                </button>
+                <h2>Category List</h2>
+                <div className="header-actions">
+                    <div className="search-container">
+                        <input 
+                            type="text" 
+                            className="form-control search-input" 
+                            placeholder="Search categories..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <i className="bi bi-search search-icon"></i>
+                    </div>
+                    <button
+                        className="add-category-btn"
+                        onClick={() => setShowModal(true)}
+                    >
+                        <i className="bi bi-plus-circle me-2"></i>
+                        Add Category
+                    </button>
+                </div>
             </div>
 
-            <CategoryList />
+            <div className="category-list-wrapper">
+                <CategoryList searchTerm={searchTerm} />
+            </div>
 
             {showModal && (
                 <div

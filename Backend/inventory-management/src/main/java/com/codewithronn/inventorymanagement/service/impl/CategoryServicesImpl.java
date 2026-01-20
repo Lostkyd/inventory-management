@@ -6,7 +6,6 @@ import com.codewithronn.inventorymanagement.dtos.response.CategoryResponse;
 import com.codewithronn.inventorymanagement.dtos.response.FileUploadResponse;
 import com.codewithronn.inventorymanagement.repository.CategoryRepository;
 import com.codewithronn.inventorymanagement.service.CategoryServices;
-import com.codewithronn.inventorymanagement.service.CloudinaryServices;
 import com.codewithronn.inventorymanagement.service.FileUploadServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class CategoryServicesImpl implements CategoryServices {
     @Override
     public CategoryResponse add(CategoryRequest request, MultipartFile file) {
         FileUploadResponse imgUrl = fileUploadServices.upload(file);
-        
         Category cat = toEntity(request);
         cat.setImgUrl(imgUrl.getCloudinaryUrl());
         cat.setPublicId(imgUrl.getPublicId());

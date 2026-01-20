@@ -36,7 +36,6 @@ public class FileUploadServicesImpl implements FileUploadServices{
             throw new RuntimeException("File is empty");
         }
 
-        // Upload to Cloudinary
         Map uploadResult = cloudinaryServices.uploadFile(file, folder);
 
         // Create entity
@@ -50,7 +49,6 @@ public class FileUploadServicesImpl implements FileUploadServices{
 
         FileUpload savedFile = fileUploadRepository.save(fileUpload);
 
-        // Return response
         return mapToResponse(savedFile);
     }
 
