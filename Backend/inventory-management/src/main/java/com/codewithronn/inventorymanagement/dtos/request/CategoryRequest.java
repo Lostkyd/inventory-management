@@ -13,5 +13,4 @@ import lombok.NoArgsConstructor;
 public class CategoryRequest {
     private String categoryName;
     private String categoryDescription;
-    private String bgColor;
 }

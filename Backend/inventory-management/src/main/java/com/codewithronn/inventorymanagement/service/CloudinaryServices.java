@@ -33,7 +33,7 @@ public class CloudinaryServices {
             return cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap(
-                            "resource_type", "application/json",
+                            "resource_type", "auto",
                             "folder", folder
                     )
             );
