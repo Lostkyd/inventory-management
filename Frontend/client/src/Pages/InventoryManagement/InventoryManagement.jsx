@@ -10,7 +10,7 @@ const InventoryManagement = () => {
     return (
         <div className="inventory-container text-light">
             <div className="inventory-header">
-                <h2>Category List</h2>
+                <h2>Product List</h2>
                 <div className="header-actions">
                     <div className="search-container">
                         <input 
