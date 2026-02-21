@@ -7,6 +7,7 @@ import InventoryManagement from './Pages/InventoryManagement/InventoryManagement
 import UserManagement from './Pages/UserManagement/UserManagement'
 import { Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
+import { Toaster } from 'react-hot-toast'
 
 const App = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -14,6 +15,7 @@ const App = () => {
   return (
     <div>
       <Menubar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      <Toaster />
       <main className={`main-content ${isCollapsed ? 'collapsed' : ''}`}>
         <Routes>
           <Route path='/dashboard' element={<Dashboard />} />
