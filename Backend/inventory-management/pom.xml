@@ -103,6 +103,15 @@
             <version>0.12.6</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,6 +138,21 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <environmentVariables>
+                        <JWT_SECRET>${env.JWT_SECRET}</JWT_SECRET>
+                        <DB_URL>${env.DB_URL}</DB_URL>
+                        <DB_USERNAME>${env.DB_USERNAME}</DB_USERNAME>
+                        <DB_PASSWORD>${env.DB_PASSWORD}</DB_PASSWORD>
+                        <CLOUDINARY_CLOUD_NAME>${env.CLOUDINARY_CLOUD_NAME}</CLOUDINARY_CLOUD_NAME>
+                        <CLOUDINARY_API_KEY>${env.CLOUDINARY_API_KEY}</CLOUDINARY_API_KEY>
+                        <CLOUDINARY_API_SECRET>${env.CLOUDINARY_API_SECRET}</CLOUDINARY_API_SECRET>
+                    </environmentVariables>
                 </configuration>
             </plugin>
         </plugins>

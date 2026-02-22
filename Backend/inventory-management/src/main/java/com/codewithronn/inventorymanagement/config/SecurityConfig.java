@@ -31,6 +31,7 @@ public class SecurityConfig {
 
     private final UserDetailsImpl userDetailsImpl;
     private final JwtRequestFilter jwtRequestFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         http.cors(Customizer.withDefaults())

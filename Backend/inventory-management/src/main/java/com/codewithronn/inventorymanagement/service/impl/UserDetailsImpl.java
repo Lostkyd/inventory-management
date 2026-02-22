@@ -22,6 +22,9 @@ public class UserDetailsImpl  implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Users existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email not found" + email));
-        return new User(existingUser.getEmail(), existingUser.getPassword(), Collections.singleton(new SimpleGrantedAuthority(existingUser.getRole())));
+        
+        String password = existingUser.getCredential().getPassword();
+        
+        return new User(existingUser.getEmail(), password, Collections.singleton(new SimpleGrantedAuthority(existingUser.getRole())));
     }
 }

@@ -22,9 +22,10 @@ public class UserController {
         try{
             return userServices.createUser(userRequest);
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create user");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+    
     @GetMapping("/users")
     public List<UserResponse> getUsers() {
         return userServices.readUsers();

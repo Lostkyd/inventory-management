@@ -3,7 +3,6 @@ package com.codewithronn.inventorymanagement.service.impl;
 import com.codewithronn.inventorymanagement.dtos.response.FileUploadResponse;
 import com.codewithronn.inventorymanagement.entity.FileUpload;
 import com.codewithronn.inventorymanagement.repository.FileUploadRepository;
-import com.codewithronn.inventorymanagement.service.CloudinaryServices;
 import com.codewithronn.inventorymanagement.service.FileUploadServices;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +36,6 @@ public class FileUploadServicesImpl implements FileUploadServices{
         }
 
         Map uploadResult = cloudinaryServices.uploadFile(file, folder);
-
-        // Create entity
         FileUpload fileUpload = new FileUpload();
         fileUpload.setFilename(file.getOriginalFilename());
         fileUpload.setCloudinaryUrl(uploadResult.get("secure_url").toString());

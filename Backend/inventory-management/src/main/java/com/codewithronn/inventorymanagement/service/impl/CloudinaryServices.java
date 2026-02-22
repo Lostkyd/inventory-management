@@ -1,4 +1,4 @@
-package com.codewithronn.inventorymanagement.service;
+package com.codewithronn.inventorymanagement.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
