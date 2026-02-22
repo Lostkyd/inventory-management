@@ -1,5 +1,6 @@
 import './Menubar.css';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 
 const Menubar = ({ isCollapsed, setIsCollapsed }) => {
 
@@ -13,9 +14,14 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                 <i className={`bi bi-chevron-${isCollapsed ? 'right' : 'left'}`}></i>
             </button>
 
-            <div className="p-4">
-                <h4 className="logo-text fw-bold mb-0">NexusFlow</h4>
+            <div className="p-4 logo-container text-center">
+                <h4 className="logo-text fw-bold mb-0">Ronn's Shop</h4>
                 <p className="text-muted small hide-on-collapse">Dashboard</p>
+                <img 
+                    src={logo}
+                        alt="Logo"
+                    className="collapsed-logo"
+                />
             </div>
 
             <div className="nav flex-column">

@@ -188,3 +188,21 @@ body {
 .hide-on-collapse {
     transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease;
 }
+.logo-container {
+    position: relative;
+}
+
+.collapsed-logo {
+    opacity: 0;
+    height: 0;
+    transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .collapsed-logo {
+    opacity: 1;
+    height: 40px;
+}
+
+.sidebar.collapsed .logo-text {
+    display: none;
+}
