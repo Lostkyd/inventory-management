@@ -15,8 +15,7 @@ const App = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
-  // ✅ pages that should NOT show Menubar
-  const noMenubarRoutes = ['/', '/landing', '/login', '/signup'];
+  const noMenubarRoutes = ['/', '/landing', '/signup'];
   const showMenubar = !noMenubarRoutes.includes(location.pathname);
 
   return (

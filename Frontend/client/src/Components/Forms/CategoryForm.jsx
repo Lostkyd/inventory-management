@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext , useMemo} from "react";
 import { assets } from "../../assets/assets";
-import { addCategory } from "../../Service/CategoryServices";
+import { addCategory } from "../../Services/category/CategoryServices";
 import { AppContext } from "../../Context/Context";
 import toast from "react-hot-toast";
 
@@ -13,12 +13,10 @@ const CategoryForm = ({ onCategoryAdded }) => {
         categoryDescription: "",
         imgUrl: ""
     });
+
     const imagePreview = useMemo(() => {
         return image ? URL.createObjectURL(image) : assets.upload;
     }, [image]);
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
 
     const onChange = (e) => {
         const value = e.target.value;
@@ -34,7 +32,7 @@ const CategoryForm = ({ onCategoryAdded }) => {
         }
         setLoading(true);
         const formData = new FormData();
-        formData.append("data", new Blob([JSON.stringify({
+        formData.append("category", new Blob([JSON.stringify({
             categoryName: data.categoryName,
             categoryDescription: data.categoryDescription
         })], { type: "application/json" }));

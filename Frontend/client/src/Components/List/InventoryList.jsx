@@ -1,40 +1,49 @@
+import { useContext } from 'react';
+import { AppContext } from '../../Context/Context';
 import './InventoryList.css';
 
 const InventoryList = () => {
-      const products = [
-        { id: 1, productName: 'Washing Machine', category: 'Electronics', quantity: '10', price: '200.00', productDescription: 'Panglaba' },
-        { id: 2, productName: 'Skirt', category: 'Clothing', quantity: '20', price: '50.00', productDescription: 'Damit mo`to tanga' },
-        { id: 3, productName: 'Pencils', category: 'Books', quantity: '50', price: '15.00', productDescription: 'Pangsaksak sa olo' },
-    ];
-  return (
-    <div className="inventory-list">
+    const { products, setProducts } = useContext(AppContext);
+
+    const handleDelete = async (productId) => {
+        try {
+            await deleteProduct(productId);
+            setProducts(products.filter(p => p.productId !== productId));
+            toast.success("Product deleted successfully");
+        } catch (error) {
+            toast.error("Unable to delete product");
+        }
+    };
+
+    return (
+        <div className="inventory-list">
             <table className="inventory-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Image</th>
                         <th>Product Name</th>
                         <th>Category</th>
                         <th>Quantity</th>
                         <th>Price</th>
-                        <th>Product Description</th>
+                        <th>Description</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {products.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.id}</td>
+                        <tr key={product.productId}>
+                            <td><img src={product.imgUrl} alt={product.productName} width={48} /></td>
                             <td>{product.productName}</td>
-                            <td>{product.category}</td>
-                            <td>{product.quantity}</td>
-                            <td>{product.price}</td>
+                            <td>{product.categoryName}</td>
+                            <td>{product.productQuantity}</td>
+                            <td>{product.productPrice}</td>
                             <td>{product.productDescription}</td>
-                                    {product.status}
                             <td>
                                 <button className="btn-edit" title="Edit">
                                     <i className="bi bi-pencil"></i>
                                 </button>
-                                <button className="btn-delete" title="Delete">
+                                <button className="btn-delete" title="Delete"
+                                    onClick={() => handleDelete(product.productId)}>
                                     <i className="bi bi-trash"></i>
                                 </button>
                             </td>
@@ -43,7 +52,7 @@ const InventoryList = () => {
                 </tbody>
             </table>
         </div>
-  );
+    );
 }
 
 export default InventoryList;

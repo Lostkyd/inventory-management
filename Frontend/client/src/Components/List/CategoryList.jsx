@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { AppContext } from "../../Context/Context";
 import "./CategoryList.css";
 import toast from "react-hot-toast";
-import { deleteCategory } from "../../Service/CategoryServices";
+import { deleteCategory } from "../../Services/category/CategoryServices";
 
 const CategoryList = ({ searchTerm }) => {
     const { categories, setCategories } = useContext(AppContext);

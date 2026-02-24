@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import CategoryForm from '../../Components/Forms/InventoryForm'
-import CategoryList from '../../Components/List/InventoryList'
+import InventoryForm from '../../Components/Forms/InventoryForm'
+import InventoryList from '../../Components/List/InventoryList'
 import './InventoryManagement.css'
 
 const InventoryManagement = () => {
@@ -16,7 +16,7 @@ const InventoryManagement = () => {
                         <input 
                             type="text" 
                             className="form-control search-input" 
-                            placeholder="Search categories..."
+                            placeholder="Search products..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -27,13 +27,13 @@ const InventoryManagement = () => {
                         onClick={() => setShowModal(true)}
                     >
                         <i className="bi bi-plus-circle me-2"></i>
-                        Add Category
+                        Add Product
                     </button>
                 </div>
             </div>
 
             <div className="inventory-list-wrapper">
-                <CategoryList searchTerm={searchTerm} />
+                <InventoryList searchTerm={searchTerm} />
             </div>
 
             {showModal && (
@@ -55,7 +55,7 @@ const InventoryManagement = () => {
                             </button>
                         </div>
 
-                        <CategoryForm
+                        <InventoryForm
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setShowModal(false)

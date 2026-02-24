@@ -27,7 +27,6 @@ public class CategoryController {
         
         ObjectMapper objectMapper = new ObjectMapper();
         CategoryRequest request = null;
-
         try{
             request = objectMapper.readValue(categoryString,  CategoryRequest.class);
             return categoryServices.add(request,file);
@@ -36,7 +35,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/categories")
     public List<CategoryResponse> fetchCategories(){
         return categoryServices.read();
 

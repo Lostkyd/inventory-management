@@ -30,7 +30,7 @@ public class ProductController {
 
     @PostMapping("/admin/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse addItem(@RequestPart("product") String productString,
+    public ProductResponse addProduct(@RequestPart("product") String productString,
                                    @RequestPart("file")MultipartFile file){
         ObjectMapper mapper = new ObjectMapper();
         ProductRequest pRequest = null;
