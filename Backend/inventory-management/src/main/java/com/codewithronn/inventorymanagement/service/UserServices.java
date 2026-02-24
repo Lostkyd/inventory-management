@@ -1,5 +1,7 @@
 package com.codewithronn.inventorymanagement.service;
 
+import com.codewithronn.inventorymanagement.dtos.request.OtpRequest;
+import com.codewithronn.inventorymanagement.dtos.request.SetPasswordRequest;
 import com.codewithronn.inventorymanagement.dtos.request.UserRequest;
 import com.codewithronn.inventorymanagement.dtos.response.UserResponse;
 
@@ -14,4 +16,10 @@ public interface UserServices {
     List<UserResponse> readUsers();
 
     void deleteUser(String id);
+
+    void verifyOtp(OtpRequest otpRequest);
+
+    void setPassword(SetPasswordRequest request);
+
+    void resendOtp(String email);
 }

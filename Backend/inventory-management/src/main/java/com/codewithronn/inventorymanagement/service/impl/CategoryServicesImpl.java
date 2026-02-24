@@ -5,6 +5,7 @@ import com.codewithronn.inventorymanagement.dtos.request.CategoryRequest;
 import com.codewithronn.inventorymanagement.dtos.response.CategoryResponse;
 import com.codewithronn.inventorymanagement.dtos.response.FileUploadResponse;
 import com.codewithronn.inventorymanagement.repository.CategoryRepository;
+import com.codewithronn.inventorymanagement.repository.ProductRepository;
 import com.codewithronn.inventorymanagement.service.CategoryServices;
 import com.codewithronn.inventorymanagement.service.FileUploadServices;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class CategoryServicesImpl implements CategoryServices {
 
     private final CategoryRepository categoryRepository;
     private final FileUploadServices fileUploadServices;
+    private final ProductRepository productRepository;
 
 
     @Override
@@ -49,10 +51,12 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     private CategoryResponse toResponse(Category cat) {
+        Integer productCounter = productRepository.countByCategoryId(cat.getId());
         return CategoryResponse.builder()
                 .categoryId(cat.getCategoryId())
                 .categoryName(cat.getCategoryName())
                 .categoryDescription(cat.getCategoryDescription())
+                .productCount(productCounter)
                 .imgUrl(cat.getImgUrl())
                 .updatedAt(cat.getUpdatedAt())
                 .createdAt(cat.getCreatedAt())

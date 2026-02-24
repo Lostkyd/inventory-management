@@ -23,7 +23,7 @@ public class EmailServices {
         
         message.setTo(toEmail);
         message.setSubject("Email Verification OTP");
-        message.setText("Your OTP is: " + otp + "\nExpires in 5 minutes.");
+        message.setText("Your OTP is: " + otp + "\nExpires in 2 minutes.");
         mailSender.send(message);
     }
 }

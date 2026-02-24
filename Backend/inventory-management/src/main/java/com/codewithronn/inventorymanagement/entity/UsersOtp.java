@@ -27,8 +27,11 @@ public class UsersOtp {
     private String id;
     private String emailOtp;
     private LocalDateTime otpExpiry;
+    private LocalDateTime lastOtpSentAt;
+    private Integer attempts;
+    private Integer resendCount;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users user;
 }

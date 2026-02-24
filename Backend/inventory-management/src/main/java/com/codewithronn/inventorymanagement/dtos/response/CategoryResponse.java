@@ -11,6 +11,7 @@ public class CategoryResponse {
     private String categoryId;
     private String categoryName;
     private String categoryDescription;
+    private Integer productCount;
     private String imgUrl;
     private Timestamp createdAt;
     private Timestamp updatedAt;

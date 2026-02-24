@@ -2,17 +2,15 @@ package com.codewithronn.inventorymanagement.controller;
 
 import com.codewithronn.inventorymanagement.dtos.request.AuthRequest;
 import com.codewithronn.inventorymanagement.dtos.request.OtpRequest;
+import com.codewithronn.inventorymanagement.dtos.request.SetPasswordRequest;
 import com.codewithronn.inventorymanagement.dtos.request.UserRequest;
 import com.codewithronn.inventorymanagement.dtos.response.AuthResponse;
 import com.codewithronn.inventorymanagement.dtos.response.UserResponse;
 import com.codewithronn.inventorymanagement.entity.Users;
-import com.codewithronn.inventorymanagement.entity.UsersOtp;
 import com.codewithronn.inventorymanagement.repository.UserRepository;
-import com.codewithronn.inventorymanagement.repository.UsersOtpRepository;
 import com.codewithronn.inventorymanagement.service.UserServices;
 import com.codewithronn.inventorymanagement.service.impl.UserDetailsImpl;
 import com.codewithronn.inventorymanagement.utility.JwtUtil;
-import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,7 +34,6 @@ public class AuthController {
     private final UserDetailsImpl userDetailsImpl;
     private final UserServices  userServices;
     private final UserRepository userRepository;
-    private final UsersOtpRepository usersOtpRepository;
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
@@ -59,33 +56,33 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-    
+
     @PostMapping("/verify-otp")
     public ResponseEntity<String> verifyOtp(@RequestBody OtpRequest otpRequest) {
-        Users user = userRepository.findByEmail(otpRequest.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        UsersOtp userOtp = usersOtpRepository.findByUser(user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP not found"));
-
-        if (!userOtp.getEmailOtp().equals(otpRequest.getEmailOtp())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP");
-        }
-
-        if (userOtp.getOtpExpiry().isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP expired");
-        }
-        user.setVerified(true);
-        userRepository.save(user);
-        usersOtpRepository.delete(userOtp);
+        userServices.verifyOtp(otpRequest);
         return ResponseEntity.ok("Email verified successfully");
     }
-    
+
+    @PostMapping("/resend-otp")
+    public ResponseEntity<String> resendOtp(@RequestBody Map<String, String> request) {
+        userServices.resendOtp(request.get("email"));
+        return ResponseEntity.ok("OTP sent successfully");
+    }
+
+    @PostMapping("/set-password")
+    public ResponseEntity<String> setPassword(@RequestBody SetPasswordRequest request) {
+        userServices.setPassword(request);
+        return ResponseEntity.ok("Password set successfully. You can now login.");
+    }
+
     private void authenticate(String email, String password) throws Exception {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         if (!user.isVerified()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email not verified. Please check your email for OTP.");
+        }
+        if (user.getCredential() == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Password not set. Please set your password first.");
         }
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));

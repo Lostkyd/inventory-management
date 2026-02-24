@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Ronn Kevin Rubio
  */
-public interface ProductRepository extends JpaRepository<Products, String>{
+public interface ProductRepository extends JpaRepository<Products, Long>{
     Optional<Products> findByProductId(String id);
-    
-    Integer totalByCategoryId(Long id);
+
+    Integer countByCategoryId(Long id);
 }

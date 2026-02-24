@@ -25,7 +25,7 @@ import org.hibernate.annotations.UpdateTimestamp;
  */
 
 @Entity
-@Table(name = "items_tbl")
+@Table(name = "product_tbl")
 @Data
 @Builder
 @AllArgsConstructor
@@ -42,7 +42,8 @@ public class Products {
     private String productName;
     private String productDescription;
     private BigDecimal productPrice;
-    
+    private Integer productQuantity;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;

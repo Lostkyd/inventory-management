@@ -35,6 +35,6 @@ public class UserCredentials {
     private String password;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users user;
 }

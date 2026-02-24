@@ -8,16 +8,27 @@ import UserManagement from './Pages/UserManagement/UserManagement'
 import { Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 import { Toaster } from 'react-hot-toast'
+import LandingPage from './Pages/Landing/LandingPage'
+import { useLocation } from 'react-router-dom'
 
 const App = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
+
+  // ✅ pages that should NOT show Menubar
+  const noMenubarRoutes = ['/', '/landing', '/login', '/signup'];
+  const showMenubar = !noMenubarRoutes.includes(location.pathname);
 
   return (
     <div>
-      <Menubar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      {showMenubar && (
+        <Menubar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      )}
       <Toaster />
-      <main className={`main-content ${isCollapsed ? 'collapsed' : ''}`}>
+      <main className={showMenubar ? `main-content ${isCollapsed ? 'collapsed' : ''}` : ''}>
         <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/landing' element={<LandingPage />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/category' element={<CategoryManagement />} />
           <Route path='/users' element={<UserManagement />} />

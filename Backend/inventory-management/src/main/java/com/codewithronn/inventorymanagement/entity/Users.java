@@ -39,7 +39,4 @@ public class Users {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserCredentials credential;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UsersOtp otp;
 }

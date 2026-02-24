@@ -15,4 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserCredentialsRepository extends JpaRepository<UserCredentials, String> {
     Optional<UserCredentials> findByUser(Users user);
+
+    boolean existsByUser(Users user);
 }
