@@ -16,7 +16,6 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
 
             <div className="p-4 logo-container text-center">
                 <h4 className="logo-text fw-bold mb-0">Ronn's Shop</h4>
-                <p className="text-muted small hide-on-collapse">Dashboard</p>
                 <img 
                     src={logo}
                         alt="Logo"
@@ -56,7 +55,7 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                     />
                     <div className="ms-3 profile-info">
                         <h6 className="text-white mb-0">Alex Morgan</h6>
-                        <small className="text-muted">Admin</small>
+                        <small className="text-white-50">Admin</small>
                     </div>
                 </div>
             </div>

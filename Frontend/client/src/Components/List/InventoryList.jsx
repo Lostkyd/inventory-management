@@ -1,16 +1,38 @@
-import { useContext } from 'react';
+import { useContext, useMemo} from 'react';
 import { AppContext } from '../../Context/Context';
+import { deleteProduct } from '../../Services/product/ProductServices';
+import { toast } from 'react-hot-toast';
 import './InventoryList.css';
 
-const InventoryList = () => {
+const InventoryList = ({ searchTerm }) => {
     const { products, setProducts } = useContext(AppContext);
 
-    const handleDelete = async (productId) => {
+    const filteredProducts = useMemo(() => {
+            return products.filter(product =>
+                product.productName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                product.productDescription
+                    ?.toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                product.categoryName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+            );
+        }, [products, searchTerm]);
+
+    const deleteProductById = async (productId) => {
         try {
-            await deleteProduct(productId);
-            setProducts(products.filter(p => p.productId !== productId));
-            toast.success("Product deleted successfully");
+            const response = await deleteProduct(productId);
+            if(response.status === 204){
+                const updatedProducts = products.filter(product => product.productId !== productId);
+                setProducts(updatedProducts);
+                toast.success("Product deleted successfully");
+            }else{
+                toast.error("Unable to delete product");
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Unable to delete product");
         }
     };
@@ -20,6 +42,7 @@ const InventoryList = () => {
             <table className="inventory-table">
                 <thead>
                     <tr>
+                        <th>No.</th>
                         <th>Image</th>
                         <th>Product Name</th>
                         <th>Category</th>
@@ -30,8 +53,9 @@ const InventoryList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map((product) => (
+                    {filteredProducts.map((product, index) => (
                         <tr key={product.productId}>
+                            <td>{index + 1}</td>
                             <td><img src={product.imgUrl} alt={product.productName} width={48} /></td>
                             <td>{product.productName}</td>
                             <td>{product.categoryName}</td>
@@ -43,7 +67,7 @@ const InventoryList = () => {
                                     <i className="bi bi-pencil"></i>
                                 </button>
                                 <button className="btn-delete" title="Delete"
-                                    onClick={() => handleDelete(product.productId)}>
+                                    onClick={() => deleteProductById(product.productId)}>
                                     <i className="bi bi-trash"></i>
                                 </button>
                             </td>

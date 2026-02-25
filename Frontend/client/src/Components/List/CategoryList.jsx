@@ -54,9 +54,14 @@ const CategoryList = ({ searchTerm }) => {
                                             alt={category.categoryName}
                                         />
                                     </div>
-                                    <h5 className="category-name">
-                                        {category.categoryName}
-                                    </h5>
+                                    <div>
+                                        <h5 className="category-name">
+                                            {category.categoryName}
+                                        </h5>
+                                        <span className="category-count">
+                                            {category.productCount} {category.productCount === 1 ? "Item" : "Items"}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="category-actions">
                                     <button className="btn-edit" title="Edit">
@@ -67,13 +72,11 @@ const CategoryList = ({ searchTerm }) => {
                                     </button>
                                 </div>
                             </div>
-
                             <div className="category-card-body">
                                 <p className="category-description">
                                     {category.categoryDescription}
                                 </p>
                             </div>
-
                         </div>
                     ))}
                 </div>

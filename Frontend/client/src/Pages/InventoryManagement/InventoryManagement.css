@@ -64,9 +64,10 @@
 .inventory-list-wrapper {
     flex: 1;
     overflow-y: auto;
-    background-color: #1a1c2e;
+    background-color: #f5f0e8;
     border-radius: 8px;
     padding: 20px;
+    border: 2px solid rgba(22, 20, 18, 0.2);
 }
 
 .add-inventory-btn {
