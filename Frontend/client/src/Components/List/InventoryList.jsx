@@ -1,41 +1,42 @@
-import { useContext, useMemo} from 'react';
-import { AppContext } from '../../Context/Context';
-import { deleteProduct } from '../../Services/product/ProductServices';
-import { toast } from 'react-hot-toast';
-import './InventoryList.css';
+import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchAllProducts, deleteProduct } from "../../Services/product/ProductServices";
+import { toast } from "react-hot-toast";
+import "./InventoryList.css";
 
 const InventoryList = ({ searchTerm }) => {
-    const { products, setProducts } = useContext(AppContext);
+    const queryClient = useQueryClient();
 
-    const filteredProducts = useMemo(() => {
-            return products.filter(product =>
-                product.productName
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                product.productDescription
-                    ?.toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                product.categoryName
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-            );
-        }, [products, searchTerm]);
+    const { data: products = [], isLoading } = useQuery({
+        queryKey: ["products"],
+        queryFn: async () => {
+            const response = await fetchAllProducts();
+            return response.data;
+        }
+    });
 
-    const deleteProductById = async (productId) => {
-        try {
-            const response = await deleteProduct(productId);
-            if(response.status === 204){
-                const updatedProducts = products.filter(product => product.productId !== productId);
-                setProducts(updatedProducts);
-                toast.success("Product deleted successfully");
-            }else{
-                toast.error("Unable to delete product");
-            }
-        } catch (error) {
+    const deleteMutation = useMutation({
+        mutationFn: (productId) => deleteProduct(productId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+            toast.success("Product deleted successfully");
+        },
+        onError: (error) => {
             console.error(error);
             toast.error("Unable to delete product");
         }
-    };
+    });
+
+    const filteredProducts = useMemo(() => {
+        return products.filter(product =>
+            product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.productDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [products, searchTerm]);
+
+    if (isLoading) return <div><p>Loading...</p></div>;
 
     return (
         <div className="inventory-list">
@@ -67,7 +68,7 @@ const InventoryList = ({ searchTerm }) => {
                                     <i className="bi bi-pencil"></i>
                                 </button>
                                 <button className="btn-delete" title="Delete"
-                                    onClick={() => deleteProductById(product.productId)}>
+                                    onClick={() => deleteMutation.mutate(product.productId)}>
                                     <i className="bi bi-trash"></i>
                                 </button>
                             </td>
@@ -77,6 +78,6 @@ const InventoryList = ({ searchTerm }) => {
             </table>
         </div>
     );
-}
+};
 
 export default InventoryList;

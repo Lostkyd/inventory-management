@@ -23,7 +23,7 @@ public interface UsersOtpRepository extends JpaRepository<UsersOtp, String> {
 
     @Modifying
     @Query("DELETE FROM UsersOtp o WHERE o.otpExpiry < :now")
-    void deleteAllExpiredOtps(@Param("now") LocalDateTime now);
+    void deleteAllExpiredOtp(@Param("now") LocalDateTime now);
 
     @Modifying
     @Query("DELETE FROM UsersOtp o WHERE o.user = :user")

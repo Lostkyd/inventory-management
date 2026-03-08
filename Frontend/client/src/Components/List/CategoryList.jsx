@@ -1,39 +1,41 @@
-import { useContext, useMemo } from "react";
-import { AppContext } from "../../Context/Context";
+import { useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchAllCategories, deleteCategory } from "../../Services/category/CategoryServices";
 import "./CategoryList.css";
 import toast from "react-hot-toast";
-import { deleteCategory } from "../../Services/category/CategoryServices";
 
 const CategoryList = ({ searchTerm }) => {
-    const { categories, setCategories } = useContext(AppContext);
+    const queryClient = useQueryClient();
 
-    const filteredCategories = useMemo(() => {
-        return categories.filter(category =>
-            category.categoryName
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            category.categoryDescription
-                ?.toLowerCase()
-                .includes(searchTerm.toLowerCase())
-        );
-    }, [categories, searchTerm]);
+    const { data: categories = [], isLoading } = useQuery({
+        queryKey: ["categories"],
+        queryFn: async () => {
+            const response = await fetchAllCategories();
+            return response.data;
+        }
+    });
 
-    const deleteCategoryById = async (categoryId) => {
-        try{
-            const response = await deleteCategory(categoryId);
-            if(response.status === 200 || response.status === 204){
-                const updatedCategories = categories.filter(category => category.categoryId !== categoryId);
-                setCategories(updatedCategories);
-                toast.success("Category deleted successfully");
-            }else{
-                toast.error("Unable to delete category");
-            }  
-        }catch(error){
+    const deleteMutation = useMutation({
+        mutationFn: (categoryId) => deleteCategory(categoryId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+            toast.success("Category deleted successfully");
+        },
+        onError: (error) => {
             console.error(error);
             toast.error("Unable to delete category");
         }
-    }
-        
+    });
+
+    const filteredCategories = useMemo(() => {
+        return categories.filter(category =>
+            category.categoryName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            category.categoryDescription?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [categories, searchTerm]);
+
+    if (isLoading) return <div className="no-results"><p>Loading...</p></div>;
+
     return (
         <div className="category-list">
             {filteredCategories.length === 0 ? (
@@ -45,19 +47,13 @@ const CategoryList = ({ searchTerm }) => {
                 <div className="category-grid">
                     {filteredCategories.map((category, index) => (
                         <div key={index} className="category-card">
-
                             <div className="category-card-header">
                                 <div className="category-info">
                                     <div className="category-image">
-                                        <img
-                                            src={category.imgUrl}
-                                            alt={category.categoryName}
-                                        />
+                                        <img src={category.imgUrl} alt={category.categoryName} />
                                     </div>
                                     <div>
-                                        <h5 className="category-name">
-                                            {category.categoryName}
-                                        </h5>
+                                        <h5 className="category-name">{category.categoryName}</h5>
                                         <span className="category-count">
                                             {category.productCount} {category.productCount === 1 ? "Item" : "Items"}
                                         </span>
@@ -67,15 +63,14 @@ const CategoryList = ({ searchTerm }) => {
                                     <button className="btn-edit" title="Edit">
                                         <i className="bi bi-pencil"></i>
                                     </button>
-                                    <button className="btn-delete" onClick ={() => deleteCategoryById(category.categoryId)}title="Delete">
+                                    <button className="btn-delete" title="Delete"
+                                        onClick={() => deleteMutation.mutate(category.categoryId)}>
                                         <i className="bi bi-trash"></i>
                                     </button>
                                 </div>
                             </div>
                             <div className="category-card-body">
-                                <p className="category-description">
-                                    {category.categoryDescription}
-                                </p>
+                                <p className="category-description">{category.categoryDescription}</p>
                             </div>
                         </div>
                     ))}

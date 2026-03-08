@@ -1,17 +1,15 @@
-import { useEffect, useState, useContext , useMemo} from "react";
-import { assets } from "../../assets/assets";
-import { addCategory } from "../../Services/category/CategoryServices";
-import { AppContext } from "../../Context/Context";
-import toast from "react-hot-toast";
+import { useState, useMemo } from 'react';
+import { assets } from '../../assets/assets';
+import { addCategory } from '../../Services/category/CategoryServices';
+import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const CategoryForm = ({ onCategoryAdded }) => {
-    const { setCategories, categories } = useContext(AppContext);
-    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
     const [image, setImage] = useState(false);
     const [data, setData] = useState({
-        categoryName: "",
-        categoryDescription: "",
-        imgUrl: ""
+        categoryName: '',
+        categoryDescription: '',
     });
 
     const imagePreview = useMemo(() => {
@@ -19,41 +17,38 @@ const CategoryForm = ({ onCategoryAdded }) => {
     }, [image]);
 
     const onChange = (e) => {
-        const value = e.target.value;
-        const name = e.target.name;
-        setData((data) => ({ ...data, [name]: value }));
+        const { name, value } = e.target;
+        setData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const onSubmit = async (e) => {
+    const mutation = useMutation({
+        mutationFn: (formData) => addCategory(formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+            toast.success("Category added successfully");
+            setData({ categoryName: "", categoryDescription: "" });
+            setImage(false);
+            if (onCategoryAdded) onCategoryAdded();
+        },
+        onError: (error) => {
+            console.error(error);
+            toast.error("Unable to add category");
+        }
+    });
+
+    const onSubmit = (e) => {
         e.preventDefault();
         if (!image) {
             toast.error("Please select an image for the category");
             return;
         }
-        setLoading(true);
         const formData = new FormData();
         formData.append("category", new Blob([JSON.stringify({
             categoryName: data.categoryName,
             categoryDescription: data.categoryDescription
         })], { type: "application/json" }));
         formData.append("file", image);
-
-        try {
-            const response = await addCategory(formData);
-            if (response.status === 201) {
-                setCategories([...categories, response.data]);
-                toast.success("Category added successfully");
-                setData({ categoryName: "", categoryDescription: "", imgUrl: "" });
-                setImage(false);
-                if (onCategoryAdded) onCategoryAdded();
-            }
-        } catch (error) {
-            console.error("Status:", error.response?.status);
-            console.error("Data:", error.response?.data);
-            toast.error("Unable to add category");
-        } finally {
-            setLoading(false);
-        }
+        mutation.mutate(formData);
     };
 
     return (
@@ -72,9 +67,7 @@ const CategoryForm = ({ onCategoryAdded }) => {
                 />
             </div>
             <div className="mb-3">
-                <label htmlFor="categoryName" className="form-label">
-                    Category Name
-                </label>
+                <label htmlFor="categoryName" className="form-label">Category Name</label>
                 <input
                     type="text"
                     id="categoryName"
@@ -86,11 +79,8 @@ const CategoryForm = ({ onCategoryAdded }) => {
                     required
                 />
             </div>
-
             <div className="mb-3">
-                <label htmlFor="description" className="form-label">
-                    Description
-                </label>
+                <label htmlFor="description" className="form-label">Description</label>
                 <textarea
                     id="description"
                     name="categoryDescription"
@@ -101,9 +91,8 @@ const CategoryForm = ({ onCategoryAdded }) => {
                     value={data.categoryDescription}
                 />
             </div>
-
-            <button type="submit" className="btn btn-success w-100" disabled={loading}>
-                {loading ? "Adding..." : "Submit"}
+            <button type="submit" className="btn btn-success w-100" disabled={mutation.isPending}>
+                {mutation.isPending ? "Adding..." : "Submit"}
             </button>
         </form>
     );

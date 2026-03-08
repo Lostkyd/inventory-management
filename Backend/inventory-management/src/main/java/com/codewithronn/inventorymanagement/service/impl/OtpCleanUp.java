@@ -19,6 +19,6 @@ public class OtpCleanUp {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void deleteExpiredOtp() {
-        usersOtpRepository.deleteAllExpiredOtps(LocalDateTime.now());
+        usersOtpRepository.deleteAllExpiredOtp(LocalDateTime.now());
     }
 }

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
-import { LoginForm } from "../../Components/Forms/LoginForm";
+import {LoginForm} from "../../Components/Forms/LoginForm";
+import UserForm from "../../Components/Forms/UserForm";
 
 const products = [
   { id: 1, name: "Wireless Headphones", price: "$129.99", category: "Electronics", stock: 48, img: "🎧" },
@@ -26,7 +27,17 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const [visible, setVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  
+
+  const handleCloseSignup = () => {
+      if (step === 1) {
+          setShowSignupModal(false);
+          setStep(1);
+      }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -51,7 +62,7 @@ export default function LandingPage() {
           <a href="#products" className="nav-link">Products</a>
           <a href="#about" className="nav-link">About</a>
           <button className="nav-link nav-link-btn" onClick={() => setShowModal(true)}>Login</button>
-          <button className="btn-primary" onClick={() => setShowModal(true)}>Sign Up</button>
+          <button className="btn-primary" onClick={() => setShowSignupModal(true)}>Sign Up</button>
         </div>
       </nav>
 
@@ -142,6 +153,25 @@ export default function LandingPage() {
               Don't have an account? <a href="/signup">Sign up</a>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* SIGNUP MODAL */}
+      {showSignupModal && (
+        <div className="modal-overlay" onClick={handleCloseSignup}>
+            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                {step === 1 && (
+                    <button className="modal-close" onClick={handleCloseSignup}>✕</button>
+                )}
+                <div className="login-logo">Sweet<span>Bliss</span></div>
+                <p className="login-tagline">Create your account to get started.</p>
+                <div className="login-divider" />
+                <UserForm
+                    step={step}
+                    setStep={setStep}
+                    onSuccess={() => { setShowSignupModal(false); setStep(1); }}
+                />
+            </div>
         </div>
       )}
 

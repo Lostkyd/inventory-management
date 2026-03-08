@@ -33,6 +33,7 @@ export const LoginForm = () => {
 
             }
         }catch (error) {
+            console.error(error);
             toast.error("Login failed. Please check your credentials and try again.");
         } finally {
             setLoading(false);
