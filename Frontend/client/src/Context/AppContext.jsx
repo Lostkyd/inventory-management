@@ -8,9 +8,16 @@ export const AppContextProvider = (props) => {
         setAuth({ token, role });
     };
 
+    const logout = () => {
+        localStorage.removeItem('token');
+        setAuth({ token: null, role: null });
+        window.location.href = '/';
+    }
+
     const contextValue = {
         auth,
         setAuthData,
+        logout,
     };
 
     return (

@@ -69,6 +69,7 @@ public class UserServicesImpl implements UserServices {
     private UserResponse convertToResponse(Users user) {
         return UserResponse.builder()
                 .email(user.getEmail())
+                .isVerified(user.isVerified())
                 .userId(user.getUserId())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

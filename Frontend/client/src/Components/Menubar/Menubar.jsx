@@ -1,8 +1,11 @@
 import './Menubar.css';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { useContext } from 'react';
+import { AppContext } from '../../Context/Context';
 
 const Menubar = ({ isCollapsed, setIsCollapsed }) => {
+    const { logout } = useContext(AppContext);
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
@@ -30,7 +33,7 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                 </Link>
                 <Link to="/explore" className="sidebar-link text-decoration-none">
                     <i className="bi bi-compass-fill"></i>
-                    <span className="hide-on-collapse ms-3">Explore</span>
+                    <span className="hide-on-collapse ms-3">Order</span>
                 </Link>
                 <Link to="/inventory" className="sidebar-link text-decoration-none">
                     <i className="bi bi-box-seam-fill"></i>
@@ -48,9 +51,9 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
 
             <div className="profile-section mt-auto p-4">
                 <div className="d-flex align-items-center">
-                    <img 
-                        src="https://randomuser.me/api/portraits/women/70.jpg" 
-                        className="profile-avatar" 
+                    <img
+                        src="https://randomuser.me/api/portraits/women/70.jpg"
+                        className="profile-avatar"
                         alt="Profile"
                     />
                     <div className="ms-3 profile-info">
@@ -58,6 +61,10 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                         <small className="text-white-50">Admin</small>
                     </div>
                 </div>
+                <button className="logout-btn mt-3" onClick={logout}>
+                    <i className="bi bi-box-arrow-right"></i>
+                    <span className="hide-on-collapse ms-3">Logout</span>
+                </button>
             </div>
         </nav>
     );

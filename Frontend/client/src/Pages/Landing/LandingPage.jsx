@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 import {LoginForm} from "../../Components/Forms/LoginForm";
-import UserForm from "../../Components/Forms/UserForm";
+import SignupForm from "../../Components/Forms/SignupForm";
 
 const products = [
   { id: 1, name: "Wireless Headphones", price: "$129.99", category: "Electronics", stock: 48, img: "🎧" },
@@ -166,7 +166,7 @@ export default function LandingPage() {
                 <div className="login-logo">Sweet<span>Bliss</span></div>
                 <p className="login-tagline">Create your account to get started.</p>
                 <div className="login-divider" />
-                <UserForm
+                <SignupForm
                     step={step}
                     setStep={setStep}
                     onSuccess={() => { setShowSignupModal(false); setStep(1); }}

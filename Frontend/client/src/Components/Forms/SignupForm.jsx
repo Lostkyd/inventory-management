@@ -1,15 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUser } from "../../Services/users/UserServices";
-import { verifyOtp, resendOtp, setPassword } from "../../Components/auth/authService";
-import "./UserForm.css";
+import { useMutation } from "@tanstack/react-query";
+import { registerUser, verifyOtp, resendOtp, setPassword } from "../auth/authService";
 
-const UserForm = ({ onUserAdded, step, setStep }) => {
-    const queryClient = useQueryClient();
+const SignupForm = ({ onSuccess, step, setStep }) => {
     const [data, setData] = useState({
         email: "",
-        role: "ROLE_USER",
         otp: "",
         password: "",
         confirmPassword: ""
@@ -21,13 +17,13 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
     };
 
     const registerMutation = useMutation({
-        mutationFn: () => addUser(data.email, data.role),
+        mutationFn: () => registerUser(data.email),
         onSuccess: () => {
             toast.success("OTP sent to " + data.email);
             setStep(2);
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || "Failed to register user");
+            toast.error(error.response?.data?.message || "Failed to register");
         }
     });
 
@@ -51,14 +47,32 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
     const passwordMutation = useMutation({
         mutationFn: () => setPassword(data.email, data.password, data.confirmPassword),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-            toast.success("User created successfully!");
-            if (onUserAdded) onUserAdded();
+            toast.success("Account created! You can now login.");
+            if (onSuccess) onSuccess();
         },
         onError: (error) => {
             toast.error(error.response?.data?.message || "Failed to set password");
         }
     });
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        registerMutation.mutate();
+    };
+
+    const handleVerifyOtp = (e) => {
+        e.preventDefault();
+        verifyMutation.mutate();
+    };
+
+    const handleSetPassword = (e) => {
+        e.preventDefault();
+        if (data.password !== data.confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+        passwordMutation.mutate();
+    };
 
     return (
         <div className="user-form">
@@ -70,34 +84,28 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                 <div className={`step ${step >= 3 ? "active" : ""}`}>3</div>
             </div>
             <p className="step-label">
-                {step === 1 && "Register User"}
-                {step === 2 && "Verify OTP"}
+                {step === 1 && "Create Account"}
+                {step === 2 && "Verify Email"}
                 {step === 3 && "Set Password"}
             </p>
 
             {step === 1 && (
-                <form onSubmit={(e) => { e.preventDefault(); registerMutation.mutate(); }}>
+                <form onSubmit={handleRegister}>
                     <div className="mb-3">
                         <label className="form-label">Email</label>
                         <input type="email" name="email" className="form-control"
                             placeholder="juandelacruz@gmail.com" value={data.email}
                             onChange={onChange} required />
                     </div>
-                    <div className="mb-3">
-                        <label className="form-label">Role</label>
-                        <select name="role" className="form-control" value={data.role} onChange={onChange}>
-                            <option value="ROLE_USER">User</option>
-                            <option value="ROLE_ADMIN">Admin</option>
-                        </select>
-                    </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={registerMutation.isPending}>
+                    <button type="submit" className="btn btn-success w-100"
+                        disabled={registerMutation.isPending}>
                         {registerMutation.isPending ? "Sending OTP..." : "Send OTP"}
                     </button>
                 </form>
             )}
 
             {step === 2 && (
-                <form onSubmit={(e) => { e.preventDefault(); verifyMutation.mutate(); }}>
+                <form onSubmit={handleVerifyOtp}>
                     <div className="mb-3">
                         <label className="form-label">Enter OTP</label>
                         <p className="otp-hint">OTP sent to <strong>{data.email}</strong></p>
@@ -105,25 +113,20 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                             placeholder="Enter OTP" value={data.otp}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={verifyMutation.isPending}>
+                    <button type="submit" className="btn btn-success w-100"
+                        disabled={verifyMutation.isPending}>
                         {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
                     </button>
                     <button type="button" className="btn-resend"
-                        onClick={() => resendMutation.mutate()} disabled={resendMutation.isPending}>
+                        onClick={() => resendMutation.mutate()}
+                        disabled={resendMutation.isPending}>
                         {resendMutation.isPending ? "Resending..." : "Resend OTP"}
                     </button>
                 </form>
             )}
 
             {step === 3 && (
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    if (data.password !== data.confirmPassword) {
-                        toast.error("Passwords do not match");
-                        return;
-                    }
-                    passwordMutation.mutate();
-                }}>
+                <form onSubmit={handleSetPassword}>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
                         <input type="password" name="password" className="form-control"
@@ -136,8 +139,9 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                             placeholder="••••••••" value={data.confirmPassword}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={passwordMutation.isPending}>
-                        {passwordMutation.isPending ? "Saving..." : "Save User"}
+                    <button type="submit" className="btn btn-success w-100"
+                        disabled={passwordMutation.isPending}>
+                        {passwordMutation.isPending ? "Saving..." : "Create Account"}
                     </button>
                 </form>
             )}
@@ -145,4 +149,4 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
     );
 };
 
-export default UserForm;
+export default SignupForm;

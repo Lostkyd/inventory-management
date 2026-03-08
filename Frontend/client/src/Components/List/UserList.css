@@ -1,0 +1,84 @@
+.user-list {
+    width: 100%;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #1a1209;
+    background-color: #f5f0e8;
+}
+
+.user-table thead {
+    background-color: #ede8de;
+    position: sticky;
+    top: 0;
+}
+
+.user-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #8B6343;
+    border-bottom: 2px solid rgba(139, 99, 67, 0.2);
+}
+
+.user-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(139, 99, 67, 0.15);
+    color: #1a1209;
+}
+
+.user-table tbody tr {
+    background-color: #f5f0e8;
+    transition: background-color 0.2s ease;
+}
+
+.user-table tbody tr:hover {
+    background-color: rgba(139, 99, 67, 0.06);
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(26, 18, 9, 0.5);
+}
+
+.no-results p {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-badge.verified {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+}
+
+.status-badge.unverified {
+    background-color: rgba(139, 99, 67, 0.1);
+    color: #8B6343;
+}
+
+.btn-edit, .btn-delete {
+    background: none;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn-edit { color: #A67C52; }
+.btn-edit:hover { background-color: rgba(139, 99, 67, 0.1); }
+
+.btn-delete { color: #f44336; }
+.btn-delete:hover { background-color: rgba(244, 67, 54, 0.1); }

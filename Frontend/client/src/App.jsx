@@ -2,7 +2,7 @@ import './App.css'
 import Menubar from './Components/Menubar/Menubar'
 import CategoryManagement from './Pages/CategoryManagement/CategoryManagement'
 import Dashboard from './Pages/Dashboard/Dashboard'
-import Explore from './Pages/Explore/Explore'
+import Order from './Pages/Order/Order'
 import InventoryManagement from './Pages/InventoryManagement/InventoryManagement'
 import UserManagement from './Pages/UserManagement/UserManagement'
 import { Routes, Route } from 'react-router-dom'
@@ -32,7 +32,7 @@ const App = () => {
           <Route path='/category' element={<CategoryManagement />} />
           <Route path='/users' element={<UserManagement />} />
           <Route path='/inventory' element={<InventoryManagement />} />
-          <Route path='/explore' element={<Explore />} />
+          <Route path='/order' element={<Order />} />
         </Routes>
       </main>
     </div>
