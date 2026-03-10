@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import UserForm from '../../Components/Forms/UserForm';
-import UserList from '../../Components/List/UserList';
+import UserForm from '../../../Components/Forms/Admin/UserForm';
+import UserList from '../../../Components/List/Admin/UserList';
 import './UserManagement.css';
 
 const UserManagement = () => {

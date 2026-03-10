@@ -39,6 +39,11 @@ export default function LandingPage() {
       }
   };
 
+  const handleSwitchToSignup = () => {
+      setShowModal(false);
+      setShowSignupModal(true);
+  };
+
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
@@ -150,7 +155,8 @@ export default function LandingPage() {
               navigate("/dashboard");
             }} />
             <div className="login-footer">
-              Don't have an account? <a href="/signup">Sign up</a>
+                Don't have an account?{" "}
+                <button className="link-btn" onClick={handleSwitchToSignup}>Sign up</button>
             </div>
           </div>
         </div>

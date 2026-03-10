@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import InventoryForm from '../../Components/Forms/InventoryForm'
-import InventoryList from '../../Components/List/InventoryList'
+import InventoryForm from '../../../Components/Forms/InventoryForm'
+import InventoryList from '../../../Components/List/InventoryList'
 import './InventoryManagement.css'
 
 const InventoryManagement = () => {

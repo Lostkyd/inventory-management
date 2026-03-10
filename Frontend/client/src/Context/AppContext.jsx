@@ -1,28 +1,28 @@
 import { useState } from 'react';
 import { AppContext } from './Context';
 
-export const AppContextProvider = (props) => {
-    const [auth, setAuth] = useState({ token: null, role: null });
+export const AppContextProvider = ({ children }) => {
+    const [auth, setAuth] = useState({
+        token: localStorage.getItem("token") || null,
+        role: localStorage.getItem("role") || null
+    });
 
     const setAuthData = (token, role) => {
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
         setAuth({ token, role });
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
         setAuth({ token: null, role: null });
-        window.location.href = '/';
-    }
-
-    const contextValue = {
-        auth,
-        setAuthData,
-        logout,
+        window.location.href = "/";
     };
 
     return (
-        <AppContext.Provider value={contextValue}>
-            {props.children}
+        <AppContext.Provider value={{ auth, setAuthData, logout }}>
+            {children}
         </AppContext.Provider>
     );
 };

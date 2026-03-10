@@ -1,11 +1,10 @@
 import './Menubar.css';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { useContext } from 'react';
-import { AppContext } from '../../Context/Context';
+import { useAuth } from "../Hooks/useAuth";
 
 const Menubar = ({ isCollapsed, setIsCollapsed }) => {
-    const { logout } = useContext(AppContext);
+    const { logout } = useAuth();
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
@@ -31,7 +30,7 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                     <i className="bi bi-house-door-fill"></i>
                     <span className="hide-on-collapse ms-3">Dashboard</span>
                 </Link>
-                <Link to="/explore" className="sidebar-link text-decoration-none">
+                <Link to="/order" className="sidebar-link text-decoration-none">
                     <i className="bi bi-compass-fill"></i>
                     <span className="hide-on-collapse ms-3">Order</span>
                 </Link>

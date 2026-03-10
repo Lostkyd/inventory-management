@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import { registerUser, verifyOtp, resendOtp, setPassword } from "../auth/authService";
+import { registerUser, verifyOtp, resendOtp, setPassword } from "../../Services/auth/public/authService";
 
 const SignupForm = ({ onSuccess, step, setStep }) => {
     const [data, setData] = useState({
@@ -41,7 +41,12 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
     const resendMutation = useMutation({
         mutationFn: () => resendOtp(data.email),
         onSuccess: () => toast.success("OTP resent!"),
-        onError: () => toast.error("Failed to resend OTP")
+        onError: (error) => {
+            const message = error.response?.data?.detail
+                || error.response?.data?.message
+                || "Failed to resend OTP";
+            toast.error(message);
+        }
     });
 
     const passwordMutation = useMutation({

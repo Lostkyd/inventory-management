@@ -1,4 +1,3 @@
-/* ===== COLOR VARIABLES ===== */
 :root {
   --accent: #8B6343;
   --accent-light: #A67C52;
@@ -136,6 +135,20 @@
   background: var(--accent-hover);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #8B6343;
+    cursor: pointer;
+    font-size: inherit;
+    text-decoration: underline;
+}
+
+.link-btn:hover {
+    color: #6B4A30;
 }
 
 /* ===== HERO ===== */

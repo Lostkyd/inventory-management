@@ -11,6 +11,7 @@ import com.codewithronn.inventorymanagement.repository.UserRepository;
 import com.codewithronn.inventorymanagement.service.UserServices;
 import com.codewithronn.inventorymanagement.service.impl.UserDetailsImpl;
 import com.codewithronn.inventorymanagement.utility.JwtUtil;
+import com.codewithronn.inventorymanagement.utility.types.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,7 +51,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse register(@RequestBody UserRequest userRequest) {
         try {
-            userRequest.setRole("ROLE_USER");
+            userRequest.setRole(Role.ROLE_USER);
             return userServices.createUser(userRequest);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

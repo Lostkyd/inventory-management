@@ -25,6 +25,6 @@ public class UserDetailsImpl  implements UserDetailsService {
         
         String password = existingUser.getCredential().getPassword();
         
-        return new User(existingUser.getEmail(), password, Collections.singleton(new SimpleGrantedAuthority(existingUser.getRole())));
+        return new User(existingUser.getEmail(), password, Collections.singleton(new SimpleGrantedAuthority(existingUser.getRole().name())));
     }
 }

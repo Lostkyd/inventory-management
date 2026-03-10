@@ -1,6 +1,7 @@
 package com.codewithronn.inventorymanagement.entity;
 
 
+import com.codewithronn.inventorymanagement.utility.types.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,9 @@ public class Users {
     @Column(unique = true)
     private String userId;
     private String email;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Builder.Default
     private boolean isVerified = false;

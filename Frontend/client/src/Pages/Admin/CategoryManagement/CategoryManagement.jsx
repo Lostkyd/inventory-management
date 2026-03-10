@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import CategoryForm from '../../Components/Forms/CategoryForm'
-import CategoryList from '../../Components/List/CategoryList'
+import CategoryForm from '../../../Components/Forms/CategoryForm'
+import CategoryList from '../../../Components/List/CategoryList'
 import './CategoryManagement.css'
 
 const CategoryManagement = () => {

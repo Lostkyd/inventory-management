@@ -1,15 +1,16 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUser } from "../../Services/users/UserServices";
-import { verifyOtp, resendOtp, setPassword } from "../../Components/auth/authService";
+import { addUser } from "../../../Services/auth/admin/UserServices";
+import { ROLES } from "../../../Constants/constants";
+import { verifyOtp, resendOtp, setPassword } from "../../../Services/auth/public/authService";
 import "./UserForm.css";
 
 const UserForm = ({ onUserAdded, step, setStep }) => {
     const queryClient = useQueryClient();
     const [data, setData] = useState({
         email: "",
-        role: "ROLE_USER",
+        role: ROLES.USER,
         otp: "",
         password: "",
         confirmPassword: ""
@@ -86,8 +87,8 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                     <div className="mb-3">
                         <label className="form-label">Role</label>
                         <select name="role" className="form-control" value={data.role} onChange={onChange}>
-                            <option value="ROLE_USER">User</option>
-                            <option value="ROLE_ADMIN">Admin</option>
+                            <option value={ROLES.USER}>User</option>
+                            <option value={ROLES.ADMIN}>Admin</option>
                         </select>
                     </div>
                     <button type="submit" className="btn btn-success w-100" disabled={registerMutation.isPending}>

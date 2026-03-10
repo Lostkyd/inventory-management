@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchAllUsers, deleteUser } from "../../Services/users/UserServices";
+import { fetchAllUsers, deleteUser } from "../../../Services/auth/admin/UserServices";
 import { toast } from "react-hot-toast";
 import "./UserList.css";
 

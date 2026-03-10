@@ -46,7 +46,7 @@ public class UserServicesImpl implements UserServices {
         Users newUser = Users.builder()
                 .userId(UUID.randomUUID().toString())
                 .email(userRequest.getEmail())
-                .role(userRequest.getRole().toUpperCase())
+                .role(userRequest.getRole())
                 .isVerified(false)
                 .build();
         userRepository.save(newUser);
@@ -80,7 +80,7 @@ public class UserServicesImpl implements UserServices {
     public String getUserRole(String email) {
         Users existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return existingUser.getRole();
+        return existingUser.getRole().name();
     }
 
     @Override
@@ -132,17 +132,14 @@ public class UserServicesImpl implements UserServices {
         Users user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        // ✅ must be verified first
         if (!user.isVerified()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email not verified. Please verify your email first");
         }
 
-        // ✅ check if password already set
         if (userCredentialRepository.existsByUser(user)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password already set. Please login");
         }
 
-        // ✅ confirm password match
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
