@@ -92,3 +92,29 @@
 .login-footer a:hover {
   color: var(--accent-hover);
 }
+
+.password-field {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 70px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #8B6343;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.password-toggle:hover {
+    color: #6B4A30;
+}

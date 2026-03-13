@@ -1,4 +1,3 @@
-import { API_BASE_URL } from '../../../Constants/ApiConfig';
 import api from '../../../Context/Interceptor/GlobalInterceptor';
 
 export const fetchAllUsers = async () => {

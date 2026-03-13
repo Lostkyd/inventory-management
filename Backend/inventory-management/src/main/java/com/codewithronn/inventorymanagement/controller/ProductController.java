@@ -4,16 +4,17 @@
  */
 package com.codewithronn.inventorymanagement.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.codewithronn.inventorymanagement.dtos.request.ProductRequest;
 import com.codewithronn.inventorymanagement.dtos.response.ProductResponse;
+import com.codewithronn.inventorymanagement.dtos.response.PublicProductResponse;
 import com.codewithronn.inventorymanagement.service.ProductServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -63,5 +64,11 @@ public class ProductController {
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Product not found" + e.getMessage());
         }
+    }
+
+    //For public product
+    @GetMapping("/products/public")
+    public List<PublicProductResponse> getPublicProducts() {
+        return productServices.fetchAvailablePublicProducts();
     }
 }

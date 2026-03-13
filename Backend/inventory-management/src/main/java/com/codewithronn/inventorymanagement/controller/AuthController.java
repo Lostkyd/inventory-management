@@ -98,7 +98,7 @@ public class AuthController {
             accessCookie.setHttpOnly(true);
             accessCookie.setSecure(false);
             accessCookie.setPath("/");
-            accessCookie.setMaxAge(60 * 15); // 15 minutes
+            accessCookie.setMaxAge(60 * 15);
             response.addCookie(accessCookie);
 
             return ResponseEntity.ok("Access token refreshed");

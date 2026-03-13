@@ -190,3 +190,29 @@
     border-color: #8B6343;
     box-shadow: 0 0 0 3px rgba(139, 99, 67, 0.15);
 }
+
+.password-field {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 70px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #8B6343;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.password-toggle:hover {
+    color: #6B4A30;
+}

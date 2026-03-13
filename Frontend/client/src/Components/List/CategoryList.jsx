@@ -30,9 +30,8 @@ const CategoryList = ({ searchTerm }) => {
     });
 
     const filteredCategories = useMemo(() => {
-        return categories.filter(category =>
-            category.categoryName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            category.categoryDescription?.toLowerCase().includes(searchTerm.toLowerCase())
+        return categories.filter((category) =>
+            category.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [categories, searchTerm]);
 
@@ -48,13 +47,14 @@ const CategoryList = ({ searchTerm }) => {
                     </div>
                 ) : (
                     <div className="category-grid">
-                        {filteredCategories.map((category, index) => (
-                            <div key={index} className="category-card">
+                        {filteredCategories.map((category) => (
+                            <div key={category.categoryId} className="category-card">
                                 <div className="category-card-header">
                                     <div className="category-info">
-                                        <div className="category-image">
-                                            <img src={category.imgUrl} alt={category.categoryName} />
+                                        <div className="category-icon">
+                                            {category.categoryName?.charAt(0)?.toUpperCase()}
                                         </div>
+
                                         <div>
                                             <h5 className="category-name">{category.categoryName}</h5>
                                             <span className="category-count">
@@ -62,25 +62,30 @@ const CategoryList = ({ searchTerm }) => {
                                             </span>
                                         </div>
                                     </div>
+
                                     <div className="category-actions">
-                                        <button className="btn-edit" title="Edit"
-                                            onClick={() => setEditingCategory(category)}>
+                                        <button
+                                            className="btn-edit"
+                                            title="Edit"
+                                            onClick={() => setEditingCategory(category)}
+                                        >
                                             <i className="bi bi-pencil"></i>
                                         </button>
-                                        <button className="btn-delete" title="Delete"
-                                            onClick={() => deleteMutation.mutate(category.categoryId)}>
+                                        <button
+                                            className="btn-delete"
+                                            title="Delete"
+                                            onClick={() => deleteMutation.mutate(category.categoryId)}
+                                        >
                                             <i className="bi bi-trash"></i>
                                         </button>
                                     </div>
-                                </div>
-                                <div className="category-card-body">
-                                    <p className="category-description">{category.categoryDescription}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
             {editingCategory && (
                 <div className="custom-modal-overlay" onClick={() => setEditingCategory(null)}>
                     <div className="custom-modal" onClick={(e) => e.stopPropagation()}>

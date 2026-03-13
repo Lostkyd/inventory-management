@@ -8,6 +8,9 @@ import "./UserForm.css";
 
 const UserForm = ({ onUserAdded, step, setStep }) => {
     const queryClient = useQueryClient();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const [data, setData] = useState({
         email: "",
         role: ROLES.USER,
@@ -90,6 +93,7 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                 <div className="step-line" />
                 <div className={`step ${step >= 3 ? "active" : ""}`}>3</div>
             </div>
+
             <p className="step-label">
                 {step === 1 && "Register User"}
                 {step === 2 && "Verify OTP"}
@@ -100,17 +104,30 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                 <form onSubmit={(e) => { e.preventDefault(); registerMutation.mutate(); }}>
                     <div className="mb-3">
                         <label className="form-label">Email</label>
-                        <input type="email" name="email" className="form-control"
-                            placeholder="juandelacruz@gmail.com" value={data.email}
-                            onChange={onChange} required />
+                        <input
+                            type="email"
+                            name="email"
+                            className="form-control"
+                            placeholder="juandelacruz@gmail.com"
+                            value={data.email}
+                            onChange={onChange}
+                            required
+                        />
                     </div>
+
                     <div className="mb-3">
                         <label className="form-label">Role</label>
-                        <select name="role" className="form-control" value={data.role} onChange={onChange}>
+                        <select
+                            name="role"
+                            className="form-control"
+                            value={data.role}
+                            onChange={onChange}
+                        >
                             <option value={ROLES.USER}>User</option>
                             <option value={ROLES.ADMIN}>Admin</option>
                         </select>
                     </div>
+
                     <button type="submit" className="btn w-100" disabled={registerMutation.isPending}>
                         {registerMutation.isPending ? "Sending OTP..." : "Send OTP"}
                     </button>
@@ -122,15 +139,27 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                     <div className="mb-3">
                         <label className="form-label">Enter OTP</label>
                         <p className="otp-hint">OTP sent to <strong>{data.email}</strong></p>
-                        <input type="text" name="otp" className="form-control"
-                            placeholder="Enter OTP" value={data.otp}
-                            onChange={onChange} required />
+                        <input
+                            type="text"
+                            name="otp"
+                            className="form-control"
+                            placeholder="Enter OTP"
+                            value={data.otp}
+                            onChange={onChange}
+                            required
+                        />
                     </div>
+
                     <button type="submit" className="btn w-100" disabled={verifyMutation.isPending}>
                         {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
                     </button>
-                    <button type="button" className="btn-resend"
-                        onClick={() => resendMutation.mutate()} disabled={resendMutation.isPending}>
+
+                    <button
+                        type="button"
+                        className="btn-resend"
+                        onClick={() => resendMutation.mutate()}
+                        disabled={resendMutation.isPending}
+                    >
                         {resendMutation.isPending ? "Resending..." : "Resend OTP"}
                     </button>
                 </form>
@@ -148,16 +177,48 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                 }}>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input type="password" name="password" className="form-control"
-                            placeholder="••••••••" value={data.password}
-                            onChange={onChange} required />
+                        <div className="password-field">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                className="form-control password-input"
+                                placeholder="••••••••"
+                                value={data.password}
+                                onChange={onChange}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
+
                     <div className="mb-3">
                         <label className="form-label">Confirm Password</label>
-                        <input type="password" name="confirmPassword" className="form-control"
-                            placeholder="••••••••" value={data.confirmPassword}
-                            onChange={onChange} required />
+                        <div className="password-field">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                className="form-control password-input"
+                                placeholder="••••••••"
+                                value={data.confirmPassword}
+                                onChange={onChange}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                            >
+                                {showConfirmPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
+
                     <button type="submit" className="btn w-100" disabled={passwordMutation.isPending}>
                         {passwordMutation.isPending ? "Saving..." : "Save User"}
                     </button>

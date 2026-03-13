@@ -1,21 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../Context/Interceptor/GlobalInterceptor";
 import "./LandingPage.css";
-import {LoginForm} from "../../Components/Forms/LoginForm";
+import { LoginForm } from "../../Components/Forms/LoginForm";
 import SignupForm from "../../Components/Forms/SignupForm";
-
-const products = [
-  { id: 1, name: "Wireless Headphones", price: "$129.99", category: "Electronics", stock: 48, img: "🎧" },
-  { id: 2, name: "Leather Wallet", price: "$49.99", category: "Accessories", stock: 120, img: "👜" },
-  { id: 3, name: "Running Shoes", price: "$89.99", category: "Footwear", stock: 35, img: "👟" },
-  { id: 4, name: "Coffee Maker", price: "$59.99", category: "Appliances", stock: 22, img: "☕" },
-  { id: 5, name: "Mechanical Keyboard", price: "$149.99", category: "Electronics", stock: 67, img: "⌨️" },
-  { id: 6, name: "Sunglasses", price: "$79.99", category: "Accessories", stock: 90, img: "🕶️" },
-  { id: 7, name: "Yoga Mat", price: "$39.99", category: "Sports", stock: 55, img: "🧘" },
-  { id: 8, name: "Desk Lamp", price: "$34.99", category: "Home", stock: 43, img: "💡" },
-  { id: 9, name: "Smartwatch", price: "$199.99", category: "Electronics", stock: 28, img: "⌚" },
-  { id: 10, name: "Backpack", price: "$69.99", category: "Accessories", stock: 76, img: "🎒" },
-];
 
 const features = [
   { icon: "🍪", title: "Cookies", desc: "Homemade cookies made with love and care" },
@@ -29,25 +17,26 @@ export default function LandingPage() {
   const [showModal, setShowModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [step, setStep] = useState(1);
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const navigate = useNavigate();
-  
 
   const handleCloseSignup = () => {
-      if (step === 1) {
-          setShowSignupModal(false);
-          setStep(1);
-      }
+    if (step === 1) {
+      setShowSignupModal(false);
+      setStep(1);
+    }
   };
 
   const handleSwitchToSignup = () => {
-      setShowModal(false);
-      setShowSignupModal(true);
+    setShowModal(false);
+    setShowSignupModal(true);
   };
 
   const handleSwitchToLogin = () => {
-      setShowSignupModal(false);
-      setShowModal(true);
-  }
+    setShowSignupModal(false);
+    setShowModal(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -57,15 +46,31 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === "Escape") setShowModal(false); };
+    const handleKey = (e) => {
+      if (e.key === "Escape") setShowModal(false);
+    };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get("/products/public");
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch public products:", error);
+        setProducts([]);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div className="landing-wrapper">
-
-      {/* NAV */}
       <nav className={`landing-nav ${scrollY > 50 ? "scrolled" : ""}`}>
         <div className="nav-logo">Sweet<span>Bliss</span></div>
         <div className="nav-links">
@@ -76,15 +81,14 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO */}
       <section className="hero-section">
         <div className="hero-bg-gradient" />
         <div className={`fade-up hero-content ${visible ? "visible" : ""}`}>
           <p className="section-label" style={{ marginBottom: "32px" }}>Sweet Bliss Manila</p>
           <h1 className="hero-text">
-            Handcrafted treats<br />
-            made with{" "}
-            <span style={{ color: "var(--accent-light)" }}>Love.</span>
+            Handcrafted treats
+            <br />
+            made with <span style={{ color: "var(--accent-light)" }}>Love.</span>
           </h1>
           <div className="divider" />
           <p className="hero-subtitle">
@@ -94,31 +98,56 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TOP 10 PRODUCTS */}
       <section id="products" className="products-section">
         <div className="section-header">
           <p className="section-label">Featured</p>
           <div className="divider" />
-          <h2 className="section-title">Top 10 Products</h2>
+          <h2 className="section-title">Available Products</h2>
         </div>
-        <div className="products-grid">
-          {products.map((p) => (
-            <div key={p.id} className="product-card">
-              <div className="product-card-header">
-                <span className="product-emoji">{p.img}</span>
-                <span className="product-category-badge">{p.category}</span>
+
+        {productsLoading ? (
+          <p className="products-empty">Loading products...</p>
+        ) : products.length === 0 ? (
+          <p className="products-empty">No available products at the moment.</p>
+        ) : (
+          <div className="products-grid">
+            {products.map((p) => (
+              <div key={p.productId} className="product-card">
+                <div className="product-image-wrap">
+                  {p.imgUrl ? (
+                    <img
+                      src={p.imgUrl}
+                      alt={p.productName}
+                      className="product-image"
+                    />
+                  ) : (
+                    <div className="product-image-placeholder">No Image</div>
+                  )}
+                </div>
+
+                <div className="product-card-body">
+                  <div className="product-card-header">
+                    <span className="product-category-badge">{p.categoryName}</span>
+                  </div>
+
+                  <h3 className="product-name">{p.productName}</h3>
+                  <p className="product-description">{p.productDescription}</p>
+
+                  <div className="product-card-footer">
+                    <span className="product-price">
+                      ₱{Number(p.productPrice).toLocaleString()}
+                    </span>
+                    <span className="product-stock">
+                      {p.available ? "Available" : "Unavailable"}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <h3 className="product-name">{p.name}</h3>
-              <div className="product-card-footer">
-                <span className="product-price">{p.price}</span>
-                <span className="product-stock">Stock: {p.stock}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* ABOUT */}
       <section id="about" className="about-section">
         <div className="about-inner">
           <div>
@@ -141,13 +170,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="landing-footer">
         <div className="footer-logo">Sweet<span>Bliss</span></div>
         <p className="footer-copy">© 2026 Sweet Bliss Manila. All rights reserved.</p>
       </footer>
 
-      {/* LOGIN MODAL */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
@@ -155,41 +182,44 @@ export default function LandingPage() {
             <div className="login-logo">Sweet<span>Bliss</span></div>
             <p className="login-tagline">Welcome back! Please sign in to continue.</p>
             <div className="login-divider" />
-            <LoginForm onSuccess={() => {
-              setShowModal(false);
-              navigate("/dashboard");
-            }} />
+            <LoginForm
+              onSuccess={() => {
+                setShowModal(false);
+                navigate("/dashboard");
+              }}
+            />
             <div className="login-footer">
-                Don't have an account?{" "}
-                <button className="link-btn" onClick={handleSwitchToSignup}>Sign up</button>
+              Don't have an account?{" "}
+              <button className="link-btn" onClick={handleSwitchToSignup}>Sign up</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* SIGNUP MODAL */}
       {showSignupModal && (
         <div className="modal-overlay" onClick={handleCloseSignup}>
-            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-                {step === 1 && (
-                    <button className="modal-close" onClick={handleCloseSignup}>✕</button>
-                )}
-                <div className="login-logo">Sweet<span>Bliss</span></div>
-                <p className="login-tagline">Create your account to get started.</p>
-                <div className="login-divider" />
-                <SignupForm
-                    step={step}
-                    setStep={setStep}
-                    onSuccess={() => { setShowSignupModal(false); setStep(1); }}
-                />
-                <div className="login-footer">
-                  Already have an account?{" "}
-                  <button className="link-btn" onClick={handleSwitchToLogin}>Sign in</button>
-              </div>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            {step === 1 && (
+              <button className="modal-close" onClick={handleCloseSignup}>✕</button>
+            )}
+            <div className="login-logo">Sweet<span>Bliss</span></div>
+            <p className="login-tagline">Create your account to get started.</p>
+            <div className="login-divider" />
+            <SignupForm
+              step={step}
+              setStep={setStep}
+              onSuccess={() => {
+                setShowSignupModal(false);
+                setStep(1);
+              }}
+            />
+            <div className="login-footer">
+              Already have an account?{" "}
+              <button className="link-btn" onClick={handleSwitchToLogin}>Sign in</button>
             </div>
+          </div>
         </div>
       )}
-
     </div>
   );
 }

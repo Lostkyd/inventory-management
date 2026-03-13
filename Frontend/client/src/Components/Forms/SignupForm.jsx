@@ -4,6 +4,9 @@ import { useMutation } from "@tanstack/react-query";
 import { registerUser, verifyOtp, resendOtp, setPassword } from "../../Services/auth/public/authService";
 
 const SignupForm = ({ onSuccess, step, setStep }) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const [data, setData] = useState({
         email: "",
         otp: "",
@@ -35,7 +38,6 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
         }
         return true;
     };
-
 
     const registerMutation = useMutation({
         mutationFn: () => registerUser(data.email),
@@ -93,7 +95,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
 
     const handleSetPassword = (e) => {
         e.preventDefault();
-        if(!validatePassword(data.password)) return;
+        if (!validatePassword(data.password)) return;
         if (data.password !== data.confirmPassword) {
             toast.error("Passwords do not match");
             return;
@@ -110,6 +112,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                 <div className="step-line" />
                 <div className={`step ${step >= 3 ? "active" : ""}`}>3</div>
             </div>
+
             <p className="step-label">
                 {step === 1 && "Create Account"}
                 {step === 2 && "Verify Email"}
@@ -120,12 +123,18 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                 <form onSubmit={handleRegister}>
                     <div className="mb-3">
                         <label className="form-label">Email</label>
-                        <input type="email" name="email" className="form-control"
-                            placeholder="juandelacruz@gmail.com" value={data.email}
-                            onChange={onChange} required />
+                        <input
+                            type="email"
+                            name="email"
+                            className="form-control"
+                            placeholder="juandelacruz@gmail.com"
+                            value={data.email}
+                            onChange={onChange}
+                            required
+                        />
                     </div>
-                    <button type="submit" className="btn w-100"
-                        disabled={registerMutation.isPending}>
+
+                    <button type="submit" className="btn w-100" disabled={registerMutation.isPending}>
                         {registerMutation.isPending ? "Sending OTP..." : "Send OTP"}
                     </button>
                 </form>
@@ -136,17 +145,27 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                     <div className="mb-3">
                         <label className="form-label">Enter OTP</label>
                         <p className="otp-hint">OTP sent to <strong>{data.email}</strong></p>
-                        <input type="text" name="otp" className="form-control"
-                            placeholder="Enter OTP" value={data.otp}
-                            onChange={onChange} required />
+                        <input
+                            type="text"
+                            name="otp"
+                            className="form-control"
+                            placeholder="Enter OTP"
+                            value={data.otp}
+                            onChange={onChange}
+                            required
+                        />
                     </div>
-                    <button type="submit" className="btn w-100"
-                        disabled={verifyMutation.isPending}>
+
+                    <button type="submit" className="btn w-100" disabled={verifyMutation.isPending}>
                         {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
                     </button>
-                    <button type="button" className="btn-resend"
+
+                    <button
+                        type="button"
+                        className="btn-resend"
                         onClick={() => resendMutation.mutate()}
-                        disabled={resendMutation.isPending}>
+                        disabled={resendMutation.isPending}
+                    >
                         {resendMutation.isPending ? "Resending..." : "Resend OTP"}
                     </button>
                 </form>
@@ -156,18 +175,49 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                 <form onSubmit={handleSetPassword}>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input type="password" name="password" className="form-control"
-                            placeholder="••••••••" value={data.password}
-                            onChange={onChange} required />
+                        <div className="password-field">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                className="form-control password-input"
+                                placeholder="••••••••"
+                                value={data.password}
+                                onChange={onChange}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
+
                     <div className="mb-3">
                         <label className="form-label">Confirm Password</label>
-                        <input type="password" name="confirmPassword" className="form-control"
-                            placeholder="••••••••" value={data.confirmPassword}
-                            onChange={onChange} required />
+                        <div className="password-field">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                className="form-control password-input"
+                                placeholder="••••••••"
+                                value={data.confirmPassword}
+                                onChange={onChange}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                            >
+                                {showConfirmPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" className="btn w-100"
-                        disabled={passwordMutation.isPending}>
+
+                    <button type="submit" className="btn w-100" disabled={passwordMutation.isPending}>
                         {passwordMutation.isPending ? "Saving..." : "Create Account"}
                     </button>
                 </form>

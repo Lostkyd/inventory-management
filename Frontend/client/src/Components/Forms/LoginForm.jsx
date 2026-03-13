@@ -9,6 +9,7 @@ export const LoginForm = () => {
     const { setAuthData } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [data, setData] = useState({
         email: '',
         password: ''
@@ -24,7 +25,7 @@ export const LoginForm = () => {
         setLoading(true);
         try {
             const response = await login(data);
-            if(response.status === 200) {
+            if (response.status === 200) {
                 toast.success("Login successful!");
                 setAuthData(null, response.data.role, response.data.firstName);
                 navigate("/dashboard");
@@ -53,18 +54,29 @@ export const LoginForm = () => {
                     required
                 />
             </div>
+
             <div className="mb-3">
                 <label className="form-label">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    className="form-control"
-                    placeholder="••••••••"
-                    onChange={onChangeLoginHandler}
-                    value={data.password}
-                    required
-                />
+                <div className="password-field">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        className="form-control password-input"
+                        placeholder="••••••••"
+                        onChange={onChangeLoginHandler}
+                        value={data.password}
+                        required
+                    />
+                    <button
+                        type="button"
+                        className="password-toggle"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                        {showPassword ? "Hide" : "Show"}
+                    </button>
+                </div>
             </div>
+
             <button type="submit" className="btn" disabled={loading}>
                 {loading ? 'Signing in...' : 'Login'}
             </button>

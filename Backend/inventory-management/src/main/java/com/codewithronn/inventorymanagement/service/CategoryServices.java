@@ -7,11 +7,11 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CategoryServices {
-    CategoryResponse add(CategoryRequest request, MultipartFile file);
+    CategoryResponse add(CategoryRequest request);
 
     List<CategoryResponse> read();
 
-    CategoryResponse update(String categoryId, String categoryName, String categoryDescription, MultipartFile file);
+    CategoryResponse update(String categoryId, String categoryName);
 
     void delete (String categoryId);
 }
