@@ -1,13 +1,14 @@
-import axios from 'axios';
+import api from '../../Context/Interceptor/GlobalInterceptor';
 
-export const addCategory = async (category) => {
-   return await axios.post('http://localhost:8080/api/v1/admin/categories', category, {headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}});
-}
+export const addCategory = async (category) => 
+    api.post(`/admin/categories`, category);
 
-export const deleteCategory = async (categoryId) => {
-    return await axios.delete(`http://localhost:8080/api/v1/admin/categories/${categoryId}`, {headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}});
-}
+export const updateCategory = async (categoryId, formData) =>
+    api.put(`/admin/categories/${categoryId}`, formData);
 
-export const fetchAllCategories = async () => {
-    return await axios.get('http://localhost:8080/api/v1/categories', {headers:{Authorization: `Bearer ${localStorage.getItem("token")}`}});
-}
+export const fetchAllCategories = async () => 
+    api.get(`/categories`);
+
+export const deleteCategory = async (categoryId) => 
+    api.delete(`/admin/categories/${categoryId}`);
+

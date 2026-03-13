@@ -4,7 +4,7 @@ import { fetchAllUsers, deleteUser } from "../../../Services/auth/admin/UserServ
 import { toast } from "react-hot-toast";
 import "./UserList.css";
 
-const UserList = ({ searchTerm }) => {
+const UserList = ({ searchTerm, onEdit }) => {
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -67,7 +67,8 @@ const UserList = ({ searchTerm }) => {
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td>{new Date(user.updatedAt).toLocaleDateString()}</td>
                                 <td>
-                                    <button className="btn-edit" title="Edit">
+                                    <button className="btn-edit" title="Edit"
+                                        onClick={() => onEdit(user)}>
                                         <i className="bi bi-pencil"></i>
                                     </button>
                                     <button className="btn-delete" title="Delete"

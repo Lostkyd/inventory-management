@@ -16,7 +16,7 @@
 .category-header h2 {
     margin: 0;
     font-size: 24px;
-    color: #1a1c2e;
+    color: #1a1209;
 }
 
 .header-actions {
@@ -31,9 +31,9 @@
 }
 
 .search-input {
-    background-color: #1a1c2e;
-    border: 2px solid #3a4447;
-    color: white;
+    background-color: #eee9df;
+    border: 2px solid rgba(139, 99, 67, 0.2);
+    color: #1a1209;
     padding: 10px 40px 10px 15px;
     border-radius: 25px;
     transition: all 0.3s ease;
@@ -41,15 +41,15 @@
 }
 
 .search-input:focus {
-    background-color: #1a1c2e;
-    border-color: #6b8cff;
-    color: white;
-    box-shadow: 0 0 0 0.2rem rgba(107, 140, 255, 0.25);
+    background-color: #f5f0e8;
+    border-color: #8B6343;
+    color: #1a1209;
+    box-shadow: 0 0 0 0.2rem rgba(139, 99, 67, 0.15);
     outline: none;
 }
 
 .search-input::placeholder {
-    color: #6c757d;
+    color: rgba(26, 18, 9, 0.4);
 }
 
 .search-icon {
@@ -57,7 +57,7 @@
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #a0a3bd;
+    color: #8B6343;
     pointer-events: none;
 }
 
@@ -71,8 +71,8 @@
 }
 
 .add-category-btn {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #8B6343;
+    color: #f5f0e8;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
@@ -85,9 +85,9 @@
 }
 
 .add-category-btn:hover {
-    background-color: #43a047;
+    background-color: #6B4A30;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 8px rgba(139, 99, 67, 0.3);
 }
 
 .custom-modal-overlay {
@@ -101,12 +101,13 @@
 }
 
 .custom-modal {
-    background-color: #2C3335;
+    background-color: #eee9df;
+    border: 1px solid rgba(139, 99, 67, 0.2);
     border-radius: 8px;
     width: 420px;
     max-width: 90%;
     padding: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(139, 99, 67, 0.15);
 }
 
 .custom-modal-header {
@@ -115,18 +116,18 @@
     align-items: center;
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #3a4447;
+    border-bottom: 1px solid rgba(139, 99, 67, 0.2);
 }
 
 .custom-modal-header h5 {
     margin: 0;
-    color: white;
+    color: #1a1209;
 }
 
 .close-btn {
     background: none;
     border: none;
-    color: #ccc;
+    color: rgba(26, 18, 9, 0.5);
     font-size: 24px;
     cursor: pointer;
     line-height: 1;
@@ -139,8 +140,8 @@
 }
 
 .close-btn:hover {
-    color: white;
-    background-color: rgba(255, 255, 255, 0.1);
+    color: #1a1209;
+    background-color: rgba(139, 99, 67, 0.1);
     border-radius: 4px;
 }
 

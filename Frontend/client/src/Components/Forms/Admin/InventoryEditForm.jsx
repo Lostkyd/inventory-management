@@ -1,20 +1,19 @@
 import { useState, useMemo } from "react";
-import { assets } from "../../assets/assets";
-import { addProduct } from "../../Services/product/ProductServices";
-import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchAllCategories } from "../../Services/category/CategoryServices";
-import '../../Styles/FormStyles.css';
+import { updateProduct } from "../../../Services/product/ProductServices";
+import { fetchAllCategories } from "../../../Services/category/CategoryServices";
+import toast from "react-hot-toast";
+import '../../../Styles/FormStyles.css';
 
-const InventoryForm = ({ onProductAdded }) => {
+const InventoryEditForm = ({ product, onClose }) => {
     const queryClient = useQueryClient();
-    const [image, setImage] = useState(false);
+    const [image, setImage] = useState(null);
     const [data, setData] = useState({
-        categoryId: "",
-        productName: "",
-        productQuantity: "",
-        productPrice: "",
-        productDescription: ""
+        categoryId: product.categoryId || "",
+        productName: product.productName || "",
+        productQuantity: product.productQuantity || "",
+        productPrice: product.productPrice || "",
+        productDescription: product.productDescription || ""
     });
 
     const { data: categories = [] } = useQuery({
@@ -26,49 +25,42 @@ const InventoryForm = ({ onProductAdded }) => {
     });
 
     const imagePreview = useMemo(() => {
-        return image ? URL.createObjectURL(image) : assets.upload;
-    }, [image]);
+        return image ? URL.createObjectURL(image) : product.imgUrl;
+    }, [image, product.imgUrl]);
 
     const onChange = (e) => {
         const { name, value } = e.target;
         setData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const mutation = useMutation({
-        mutationFn: (formData) => addProduct(formData),
+    const updateMutation = useMutation({
+        mutationFn: () => {
+            const formData = new FormData();
+            formData.append("product", JSON.stringify(data));
+            if (image) formData.append("file", image);
+            return updateProduct(product.productId, formData);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
             queryClient.invalidateQueries({ queryKey: ["categories"] });
-            toast.success("Product added successfully");
-            setData({ categoryId: "", productName: "", productQuantity: "", productPrice: "", productDescription: "" });
-            setImage(false);
-            if (onProductAdded) onProductAdded();
+            toast.success("Product updated successfully!");
+            onClose();
         },
-        onError: () => toast.error("Unable to add product")
+        onError: (error) => {
+            toast.error(error.response?.data?.message || "Failed to update product");
+        }
     });
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-        if (!image) {
-            toast.error("Please select an image");
-            return;
-        }
-        const formData = new FormData();
-        formData.append("product", JSON.stringify(data));
-        formData.append("file", image);
-        mutation.mutate(formData);
-    };
-
     return (
-        <form onSubmit={onSubmit}>
-            <label htmlFor="image" className="form-upload-area">
+        <form onSubmit={(e) => { e.preventDefault(); updateMutation.mutate(); }}>
+            <label htmlFor="edit-product-image" className="form-upload-area">
                 <img src={imagePreview} alt="Preview" className="form-upload-preview" />
                 <div className="form-upload-text">
                     Product Image
-                    <span>{image ? image.name : "Click to upload"}</span>
+                    <span>{image ? image.name : "Click to change image"}</span>
                 </div>
             </label>
-            <input type="file" id="image" hidden
+            <input type="file" id="edit-product-image" hidden
                 onChange={(e) => setImage(e.target.files[0])} />
 
             <div className="mb-3">
@@ -86,32 +78,33 @@ const InventoryForm = ({ onProductAdded }) => {
             <div className="mb-3">
                 <label className="form-label">Product Name</label>
                 <input type="text" name="productName" className="form-control"
-                    placeholder="Enter product name"
-                    onChange={onChange} value={data.productName} required />
+                    value={data.productName} onChange={onChange} required />
             </div>
             <div className="edit-form-grid">
                 <div className="mb-3">
                     <label className="form-label">Quantity</label>
                     <input type="number" name="productQuantity" className="form-control"
-                        placeholder="0" onChange={onChange} value={data.productQuantity} required />
+                        value={data.productQuantity} onChange={onChange} required />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Price</label>
-                    <input type="number" name="productPrice" className="form-control"
-                        placeholder="0.00" onChange={onChange} value={data.productPrice} required />
+                    <div className="input-currency">
+                        <span>&#8369;</span>
+                        <input type="number" name="productPrice" className="form-control"
+                            value={data.productPrice} onChange={onChange} required />
+                    </div>
                 </div>
             </div>
             <div className="mb-3">
                 <label className="form-label">Description</label>
                 <textarea name="productDescription" className="form-control"
-                    rows="3" placeholder="Product description"
-                    onChange={onChange} value={data.productDescription} />
+                    rows="3" value={data.productDescription} onChange={onChange} />
             </div>
-            <button type="submit" className="form-submit-btn" disabled={mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Add Product"}
+            <button type="submit" className="form-submit-btn" disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Saving..." : "Save Changes"}
             </button>
         </form>
     );
 };
 
-export default InventoryForm;
+export default InventoryEditForm;

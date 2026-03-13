@@ -16,6 +16,27 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
         setData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const validatePassword = (password) => {
+        if (password.length < 8) {
+            toast.error("Password must be at least 8 characters");
+            return false;
+        }
+        if (!/[A-Z]/.test(password)) {
+            toast.error("Password must contain at least one uppercase letter");
+            return false;
+        }
+        if (!/[0-9]/.test(password)) {
+            toast.error("Password must contain at least one number");
+            return false;
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+            toast.error("Password must contain at least one special character (!@#$%^&*)");
+            return false;
+        }
+        return true;
+    };
+
+
     const registerMutation = useMutation({
         mutationFn: () => registerUser(data.email),
         onSuccess: () => {
@@ -72,6 +93,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
 
     const handleSetPassword = (e) => {
         e.preventDefault();
+        if(!validatePassword(data.password)) return;
         if (data.password !== data.confirmPassword) {
             toast.error("Passwords do not match");
             return;
@@ -102,7 +124,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                             placeholder="juandelacruz@gmail.com" value={data.email}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100"
+                    <button type="submit" className="btn w-100"
                         disabled={registerMutation.isPending}>
                         {registerMutation.isPending ? "Sending OTP..." : "Send OTP"}
                     </button>
@@ -118,7 +140,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                             placeholder="Enter OTP" value={data.otp}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100"
+                    <button type="submit" className="btn w-100"
                         disabled={verifyMutation.isPending}>
                         {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
                     </button>
@@ -144,7 +166,7 @@ const SignupForm = ({ onSuccess, step, setStep }) => {
                             placeholder="••••••••" value={data.confirmPassword}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100"
+                    <button type="submit" className="btn w-100"
                         disabled={passwordMutation.isPending}>
                         {passwordMutation.isPending ? "Saving..." : "Create Account"}
                     </button>

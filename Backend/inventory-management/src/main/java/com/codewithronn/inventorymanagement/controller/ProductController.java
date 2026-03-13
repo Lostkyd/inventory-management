@@ -4,16 +4,16 @@
  */
 package com.codewithronn.inventorymanagement.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.codewithronn.inventorymanagement.dtos.request.ProductRequest;
 import com.codewithronn.inventorymanagement.dtos.response.ProductResponse;
 import com.codewithronn.inventorymanagement.service.ProductServices;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.json.JsonParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -37,9 +37,17 @@ public class ProductController {
         try{
             pRequest = mapper.readValue(productString, ProductRequest.class);
             return productServices.add(pRequest, file);
-        }catch (JsonParseException e){
+        }catch (JsonProcessingException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Exception occured while parsing the json" + e.getMessage());
         }
+    }
+
+    @PutMapping("/admin/products/{productId}")
+    public ProductResponse updateProduct(
+            @PathVariable String productId,
+            @RequestPart("product") String productData,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        return productServices.update(productId, productData, file);
     }
 
     @GetMapping("/products")

@@ -2,6 +2,7 @@ package com.codewithronn.inventorymanagement.service.impl;
 
 import com.codewithronn.inventorymanagement.dtos.request.OtpRequest;
 import com.codewithronn.inventorymanagement.dtos.request.SetPasswordRequest;
+import com.codewithronn.inventorymanagement.dtos.request.UpdateUserRequest;
 import com.codewithronn.inventorymanagement.dtos.request.UserRequest;
 import com.codewithronn.inventorymanagement.dtos.response.UserResponse;
 import com.codewithronn.inventorymanagement.entity.UserCredentials;
@@ -66,9 +67,36 @@ public class UserServicesImpl implements UserServices {
         return convertToResponse(newUser);
     }
 
+    @Override
+    public UserResponse updateUser(String id, UpdateUserRequest request) {
+        Users user = userRepository.findByUserId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
+        if (request.getMiddleName() != null) user.setMiddleName(request.getMiddleName());
+        if (request.getLastName() != null) user.setLastName(request.getLastName());
+        if (request.getAddress() != null) user.setAddress(request.getAddress());
+        if (request.getPhoneNumber() != null) user.setPhoneNumber(request.getPhoneNumber());
+        if (request.getBirthDate() != null) user.setBirthDate(request.getBirthDate());
+        userRepository.save(user);
+        return convertToResponse(user);
+    }
+
+    @Override
+    public String getUserFirstName(String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user.getFirstName() != null ? user.getFirstName() : user.getEmail();
+    }
+
     private UserResponse convertToResponse(Users user) {
         return UserResponse.builder()
                 .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .middleName(user.getMiddleName())
+                .lastName(user.getLastName())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
+                .birthDate(user.getBirthDate())
                 .isVerified(user.isVerified())
                 .userId(user.getUserId())
                 .createdAt(user.getCreatedAt())
@@ -144,6 +172,8 @@ public class UserServicesImpl implements UserServices {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
 
+        validatePassword(request.getPassword());
+
         UserCredentials credential = UserCredentials.builder()
                 .id(UUID.randomUUID().toString())
                 .email(request.getEmail())
@@ -151,6 +181,17 @@ public class UserServicesImpl implements UserServices {
                 .user(user)
                 .build();
         userCredentialRepository.save(credential);
+    }
+
+    private void validatePassword(String password) {
+        if (password.length() < 8)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters");
+        if (!password.matches(".*[A-Z].*"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must contain at least one uppercase letter");
+        if (!password.matches(".*[0-9].*"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must contain at least one number");
+        if (!password.matches(".*[!@#$%^&*].*"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must contain at least one special character (!@#$%^&*)");
     }
 
     @Override

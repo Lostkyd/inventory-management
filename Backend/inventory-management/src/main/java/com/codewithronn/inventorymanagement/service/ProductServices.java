@@ -13,10 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Ronn Kevin Rubio
  */
-    public interface ProductServices {
-        ProductResponse add(ProductRequest productRequest, MultipartFile file);
+public interface ProductServices {
+    ProductResponse add(ProductRequest productRequest, MultipartFile file);
 
-        List<ProductResponse> fetchProducts();
+    ProductResponse update(String productId, String productData, MultipartFile file);
 
-        void deleteProduct(String productId);
-    }
+    List<ProductResponse> fetchProducts();
+
+    void deleteProduct(String productId);
+}

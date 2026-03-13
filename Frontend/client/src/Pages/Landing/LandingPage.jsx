@@ -44,6 +44,11 @@ export default function LandingPage() {
       setShowSignupModal(true);
   };
 
+  const handleSwitchToLogin = () => {
+      setShowSignupModal(false);
+      setShowModal(true);
+  }
+
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
@@ -177,6 +182,10 @@ export default function LandingPage() {
                     setStep={setStep}
                     onSuccess={() => { setShowSignupModal(false); setStep(1); }}
                 />
+                <div className="login-footer">
+                  Already have an account?{" "}
+                  <button className="link-btn" onClick={handleSwitchToLogin}>Sign in</button>
+              </div>
             </div>
         </div>
       )}

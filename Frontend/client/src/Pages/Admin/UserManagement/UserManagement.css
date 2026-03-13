@@ -72,7 +72,7 @@
 }
 
 .add-user-btn {
-    background-color: #4CAF50;
+    background-color: #8B6343;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -86,9 +86,9 @@
 }
 
 .add-user-btn:hover {
-    background-color: #43a047;
+    background-color: #6B4A30;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 8px rgba(139, 99, 67, 0.3);
 }
 
 .custom-modal-overlay {

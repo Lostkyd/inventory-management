@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import UserForm from '../../../Components/Forms/Admin/UserForm';
+import UserEditForm from '../../../Components/Forms/Admin/UserEditForm';
 import UserList from '../../../Components/List/Admin/UserList';
 import './UserManagement.css';
 
@@ -7,6 +8,7 @@ const UserManagement = () => {
     const [showModal, setShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [step, setStep] = useState(1);
+    const [editingUser, setEditingUser] = useState(null);
 
     const handleCloseModal = () => {
         if (step === 1) {
@@ -38,7 +40,10 @@ const UserManagement = () => {
             </div>
 
             <div className="user-list-wrapper">
-                <UserList searchTerm={searchTerm} />
+                <UserList
+                    searchTerm={searchTerm}
+                    onEdit={(user) => setEditingUser(user)}
+                />
             </div>
 
             {showModal && (
@@ -54,6 +59,21 @@ const UserManagement = () => {
                             step={step}
                             setStep={setStep}
                             onUserAdded={() => { setShowModal(false); setStep(1); }}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {editingUser && (
+                <div className="custom-modal-overlay" onClick={() => setEditingUser(null)}>
+                    <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="custom-modal-header">
+                            <h5>Edit User</h5>
+                            <button className="close-btn" onClick={() => setEditingUser(null)}>✕</button>
+                        </div>
+                        <UserEditForm
+                            user={editingUser}
+                            onClose={() => setEditingUser(null)}
                         />
                     </div>
                 </div>

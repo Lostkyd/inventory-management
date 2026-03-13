@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "user_tbl")
@@ -26,6 +27,14 @@ public class Users {
     @Column(unique = true)
     private String userId;
     private String email;
+
+    // Editing user info after creating an account
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String address;
+    private String phoneNumber;
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     private Role role;

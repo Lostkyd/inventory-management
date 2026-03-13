@@ -1,29 +1,20 @@
-package com.codewithronn.inventorymanagement.dtos.response;
+package com.codewithronn.inventorymanagement.dtos.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
-    private String userId;
-    private String email;
+public class UpdateUserRequest {
     private String firstName;
     private String middleName;
     private String lastName;
     private String address;
     private String phoneNumber;
     private LocalDate birthDate;
-    private boolean isVerified;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-
 }

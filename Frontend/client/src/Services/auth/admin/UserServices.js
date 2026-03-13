@@ -1,16 +1,18 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:8080/api/v1/admin";
-const authHeader = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+import { API_BASE_URL } from '../../../Constants/ApiConfig';
+import api from '../../../Context/Interceptor/GlobalInterceptor';
 
 export const fetchAllUsers = async () => {
-    return await axios.get(`${BASE_URL}/users`, authHeader());
-}
-
-export const deleteUser = async (userId) => {
-    return await axios.delete(`${BASE_URL}/users/${userId}`, authHeader());
+    return await api.get(`/admin/users`);
 }
 
 export const addUser = async (email, role) => {
-    return await axios.post(`${BASE_URL}/register`, { email, role }, authHeader());
+    return await api.post(`/admin/register`, { email, role });
 }
+
+export const updateUser = async (userId, data) =>
+    api.put(`/admin/users/${userId}`, data);
+
+export const deleteUser = async (userId) => {
+    return await api.delete(`/admin/users/${userId}`);
+}
+

@@ -2,6 +2,7 @@ package com.codewithronn.inventorymanagement.service;
 
 import com.codewithronn.inventorymanagement.dtos.request.OtpRequest;
 import com.codewithronn.inventorymanagement.dtos.request.SetPasswordRequest;
+import com.codewithronn.inventorymanagement.dtos.request.UpdateUserRequest;
 import com.codewithronn.inventorymanagement.dtos.request.UserRequest;
 import com.codewithronn.inventorymanagement.dtos.response.UserResponse;
 
@@ -10,6 +11,10 @@ import java.util.List;
 public interface UserServices {
 
     UserResponse createUser(UserRequest userRequest);
+
+    UserResponse updateUser(String id, UpdateUserRequest request);
+
+    String getUserFirstName(String email);
 
     String getUserRole(String email);
 

@@ -4,7 +4,7 @@ import logo from '../../assets/logo.png';
 import { useAuth } from "../Hooks/useAuth";
 
 const Menubar = ({ isCollapsed, setIsCollapsed }) => {
-    const { logout } = useAuth();
+    const { logout, firstName, role } = useAuth();
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
@@ -56,8 +56,8 @@ const Menubar = ({ isCollapsed, setIsCollapsed }) => {
                         alt="Profile"
                     />
                     <div className="ms-3 profile-info">
-                        <h6 className="text-white mb-0">Alex Morgan</h6>
-                        <small className="text-white-50">Admin</small>
+                        <h6 className="text-white mb-0">{firstName || "User"}</h6>
+                        <small className="text-white-50">{role === "ROLE_ADMIN" ? "Admin" : "User"}</small>
                     </div>
                 </div>
                 <button className="logout-btn mt-3" onClick={logout}>

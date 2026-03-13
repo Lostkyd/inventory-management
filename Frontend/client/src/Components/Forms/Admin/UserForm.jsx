@@ -49,6 +49,26 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
         onError: () => toast.error("Failed to resend OTP")
     });
 
+    const validatePassword = (password) => {
+        if (password.length < 8) {
+            toast.error("Password must be at least 8 characters");
+            return false;
+        }
+        if (!/[A-Z]/.test(password)) {
+            toast.error("Password must contain at least one uppercase letter");
+            return false;
+        }
+        if (!/[0-9]/.test(password)) {
+            toast.error("Password must contain at least one number");
+            return false;
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+            toast.error("Password must contain at least one special character (!@#$%^&*)");
+            return false;
+        }
+        return true;
+    };
+
     const passwordMutation = useMutation({
         mutationFn: () => setPassword(data.email, data.password, data.confirmPassword),
         onSuccess: () => {
@@ -91,7 +111,7 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                             <option value={ROLES.ADMIN}>Admin</option>
                         </select>
                     </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={registerMutation.isPending}>
+                    <button type="submit" className="btn w-100" disabled={registerMutation.isPending}>
                         {registerMutation.isPending ? "Sending OTP..." : "Send OTP"}
                     </button>
                 </form>
@@ -106,7 +126,7 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                             placeholder="Enter OTP" value={data.otp}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={verifyMutation.isPending}>
+                    <button type="submit" className="btn w-100" disabled={verifyMutation.isPending}>
                         {verifyMutation.isPending ? "Verifying..." : "Verify OTP"}
                     </button>
                     <button type="button" className="btn-resend"
@@ -119,6 +139,7 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
             {step === 3 && (
                 <form onSubmit={(e) => {
                     e.preventDefault();
+                    if (!validatePassword(data.password)) return;
                     if (data.password !== data.confirmPassword) {
                         toast.error("Passwords do not match");
                         return;
@@ -137,7 +158,7 @@ const UserForm = ({ onUserAdded, step, setStep }) => {
                             placeholder="••••••••" value={data.confirmPassword}
                             onChange={onChange} required />
                     </div>
-                    <button type="submit" className="btn btn-success w-100" disabled={passwordMutation.isPending}>
+                    <button type="submit" className="btn w-100" disabled={passwordMutation.isPending}>
                         {passwordMutation.isPending ? "Saving..." : "Save User"}
                     </button>
                 </form>

@@ -8,12 +8,14 @@ import com.codewithronn.inventorymanagement.repository.CategoryRepository;
 import com.codewithronn.inventorymanagement.repository.ProductRepository;
 import com.codewithronn.inventorymanagement.service.CategoryServices;
 import com.codewithronn.inventorymanagement.service.FileUploadServices;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,6 @@ public class CategoryServicesImpl implements CategoryServices {
     private final CategoryRepository categoryRepository;
     private final FileUploadServices fileUploadServices;
     private final ProductRepository productRepository;
-
 
     @Override
     public CategoryResponse add(CategoryRequest request, MultipartFile file) {
@@ -43,11 +44,39 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
+    @Transactional
+    public CategoryResponse update(String categoryId, String categoryName, String categoryDescription, MultipartFile file) {
+        Category category = categoryRepository.findByCategoryId(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        if (categoryName != null) category.setCategoryName(categoryName);
+        if (categoryDescription != null) category.setCategoryDescription(categoryDescription);
+
+        String previousPublicId = category.getPublicId();
+        if (file != null && !file.isEmpty()) {
+            FileUploadResponse imgUrl = fileUploadServices.upload(file);
+            category.setImgUrl(imgUrl.getCloudinaryUrl());
+            category.setPublicId(imgUrl.getPublicId());
+        }
+
+        category = categoryRepository.save(category);
+        if (file != null && !file.isEmpty() && previousPublicId != null && !previousPublicId.equals(category.getPublicId())) {
+            fileUploadServices.deleteByPublicId(previousPublicId);
+        }
+        return toResponse(category);
+    }
+
+    @Override
+    @Transactional
     public void delete(String categoryId) {
         Category existCategory = categoryRepository.findByCategoryId(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found" + categoryId));
-        fileUploadServices.deleteByPublicId(existCategory.getPublicId());
+        String publicId = existCategory.getPublicId();
         categoryRepository.delete(existCategory);
+        categoryRepository.flush();
+        if (publicId != null) {
+            fileUploadServices.deleteByPublicId(publicId);
+        }
     }
 
     private CategoryResponse toResponse(Category cat) {

@@ -1,0 +1,118 @@
+/* ===== SHARED FORM STYLES ===== */
+.form-upload-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px dashed rgba(139, 99, 67, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f5f0e8;
+}
+
+.form-upload-area:hover {
+    border-color: #8B6343;
+    background: rgba(139, 99, 67, 0.05);
+}
+
+.form-upload-preview {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.form-upload-text {
+    font-size: 0.8rem;
+    color: rgba(26, 18, 9, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.form-upload-text span {
+    display: block;
+    font-size: 0.75rem;
+    color: #8B6343;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(26, 18, 9, 0.45);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    background: #f5f0e8;
+    border: 1px solid rgba(139, 99, 67, 0.2);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #1a1209;
+    outline: none;
+    transition: all 0.25s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.form-control:focus {
+    border-color: #8B6343;
+    box-shadow: 0 0 0 3px rgba(139, 99, 67, 0.1);
+    background: #faf7f2;
+}
+
+.form-control::placeholder {
+    color: rgba(26, 18, 9, 0.3);
+    font-size: 0.88rem;
+}
+
+.form-submit-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+    background: #8B6343;
+    color: #f5f0e8;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.form-submit-btn:hover {
+    background: #6B4A30;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 99, 67, 0.25);
+}
+
+.form-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.input-currency span {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(26, 18, 9, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.form-control::-webkit-outer-spin-button,
+.form-control::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
