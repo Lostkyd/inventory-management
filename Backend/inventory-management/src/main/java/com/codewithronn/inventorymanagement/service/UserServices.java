@@ -14,6 +14,8 @@ public interface UserServices {
 
     UserResponse updateUser(String id, UpdateUserRequest request);
 
+    UserResponse updateUserRole(String id, String role, String currentAdminEmail);
+
     String getUserFirstName(String email);
 
     String getUserRole(String email);

@@ -7,6 +7,8 @@ export const fetchAllUsers = async () => {
 export const addUser = async (email, role) => {
     return await api.post(`/admin/register`, { email, role });
 }
+export const updateUserRole = async (userId, role) =>
+    api.patch(`/admin/users/${userId}/role`, { role });
 
 export const updateUser = async (userId, data) =>
     api.put(`/admin/users/${userId}`, data);

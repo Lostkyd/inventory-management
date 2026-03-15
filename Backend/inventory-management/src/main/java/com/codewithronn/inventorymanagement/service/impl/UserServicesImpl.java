@@ -13,6 +13,8 @@ import com.codewithronn.inventorymanagement.repository.UserRepository;
 import com.codewithronn.inventorymanagement.repository.UsersOtpRepository;
 import com.codewithronn.inventorymanagement.service.UserServices;
 import java.time.LocalDateTime;
+
+import com.codewithronn.inventorymanagement.utility.types.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,6 +84,35 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
+    public UserResponse updateUserRole(String id, String role, String currentAdminEmail) {
+        Users targetUser = userRepository.findByUserId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        Users currAdmin = userRepository.findByEmail(currentAdminEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin not found"));
+
+        Role newRole;
+
+        try{
+            newRole = Role.valueOf(role);
+        }catch(IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid role");
+        }
+
+        if(targetUser.getEmail().equals(currAdmin.getEmail()) && newRole == Role.ROLE_USER){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "You cannot remove your own admin role"
+            );
+        }
+
+        targetUser.setRole(newRole);
+        userRepository.save(targetUser);
+
+        return convertToResponse(targetUser);
+    }
+
+    @Override
     public String getUserFirstName(String email) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -98,6 +129,7 @@ public class UserServicesImpl implements UserServices {
                 .phoneNumber(user.getPhoneNumber())
                 .birthDate(user.getBirthDate())
                 .isVerified(user.isVerified())
+                .role(user.getRole() != null ? user.getRole().name() : null)
                 .userId(user.getUserId())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

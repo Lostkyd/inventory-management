@@ -82,3 +82,19 @@
 
 .btn-delete { color: #f44336; }
 .btn-delete:hover { background-color: rgba(244, 67, 54, 0.1); }
+
+.role-select {
+    background-color: #eee9df;
+    border: 1px solid rgba(139, 99, 67, 0.2);
+    color: #1a1209;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+.role-select:focus {
+    border-color: #8B6343;
+    box-shadow: 0 0 0 0.15rem rgba(139, 99, 67, 0.15);
+}

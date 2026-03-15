@@ -27,7 +27,7 @@ export const LoginForm = () => {
             const response = await login(data);
             if (response.status === 200) {
                 toast.success("Login successful!");
-                setAuthData(null, response.data.role, response.data.firstName);
+                setAuthData(response.data.email, response.data.role, response.data.firstName);
                 navigate("/dashboard");
             }
         } catch (error) {

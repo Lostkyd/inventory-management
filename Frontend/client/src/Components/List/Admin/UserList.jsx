@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchAllUsers, deleteUser } from "../../../Services/auth/admin/UserServices";
+import { fetchAllUsers, deleteUser , updateUserRole } from "../../../Services/auth/admin/UserServices";
+import { useAuth } from "../../Hooks/useAuth";
+import { ROLES } from "../../../Constants/constants";
 import { toast } from "react-hot-toast";
 import "./UserList.css";
 
 const UserList = ({ searchTerm, onEdit }) => {
     const queryClient = useQueryClient();
-
+        const { email, role } = useAuth();
     const { data: users = [], isLoading } = useQuery({
         queryKey: ["users"],
         queryFn: async () => {
@@ -24,6 +26,24 @@ const UserList = ({ searchTerm, onEdit }) => {
         onError: (error) => {
             console.error(error);
             toast.error("Unable to delete user");
+        }
+    });
+
+    const roleMutation = useMutation({
+        mutationFn: ({ userId, role }) => updateUserRole(userId, role),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+            toast.success("User role updated successfully");
+        },
+        onError: (error) => {
+            console.error(error);
+            const message =
+                error.response?.data?.detail ||
+                error.response?.data?.message ||
+                "Unable to update role";
+
+            toast.error(message);
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     });
 
@@ -49,6 +69,7 @@ const UserList = ({ searchTerm, onEdit }) => {
                             <th>No.</th>
                             <th>Email</th>
                             <th>Status</th>
+                            <th>Role</th>
                             <th>Created At</th>
                             <th>Updated At</th>
                             <th>Actions</th>
@@ -60,9 +81,46 @@ const UserList = ({ searchTerm, onEdit }) => {
                                 <td>{index + 1}</td>
                                 <td>{user.email}</td>
                                 <td>
-                                    <span className={`status-badge ${user.verified ? "verified" : "unverified"}`}>
-                                        {user.verified ? "Verified" : "Unverified"}
+                                    <span className={`status-badge ${user.isVerified ? "verified" : "unverified"}`}>
+                                        {user.isVerified ? "Verified" : "Unverified"}
                                     </span>
+                                </td>
+                                <td>
+                                    <select
+                                        className="role-select"
+                                        value={user.role || ROLES.USER}
+                                        disabled={roleMutation.isPending}
+                                        onChange={(e) => {
+                                            const newRole = e.target.value;
+
+                                            if (
+                                                email === user.email &&
+                                                role === ROLES.ADMIN &&
+                                                newRole === ROLES.USER
+                                            ) {
+                                                toast.error("You cannot remove your own admin role");
+                                                return;
+                                            }
+
+                                            if (
+                                                window.confirm(
+                                                    `Change role of ${user.email} to ${
+                                                        newRole === ROLES.ADMIN ? "Admin" : "User"
+                                                    }?`
+                                                )
+                                            ) {
+                                                roleMutation.mutate({
+                                                    userId: user.userId,
+                                                    role: newRole
+                                                });
+                                            } else {
+                                                queryClient.invalidateQueries({ queryKey: ["users"] });
+                                            }
+                                        }}
+                                    >
+                                        <option value={ROLES.USER}>User</option>
+                                        <option value={ROLES.ADMIN}>Admin</option>
+                                    </select>
                                 </td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td>{new Date(user.updatedAt).toLocaleDateString()}</td>

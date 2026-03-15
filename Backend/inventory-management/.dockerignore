@@ -1,0 +1,8 @@
+target/
+.git/
+.idea/
+*.log
+.env
+.gitignore
+HELP.md
+nbactions.xml

@@ -1,12 +1,14 @@
 package com.codewithronn.inventorymanagement.controller;
 
 import com.codewithronn.inventorymanagement.dtos.request.UpdateUserRequest;
+import com.codewithronn.inventorymanagement.dtos.request.UpdateUserRoleRequest;
 import com.codewithronn.inventorymanagement.dtos.request.UserRequest;
 import com.codewithronn.inventorymanagement.dtos.response.UserResponse;
 import com.codewithronn.inventorymanagement.service.UserServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +34,13 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@PathVariable String id,
                                                    @RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok(userServices.updateUser(id, request));
+    }
+
+    @PatchMapping("/users/{id}/role")
+    public ResponseEntity<UserResponse> updateUserRole(@PathVariable String id, @RequestBody UpdateUserRoleRequest request, Authentication authentication) {
+        return ResponseEntity.ok(
+                userServices.updateUserRole(id, request.getRole(), authentication.getName())
+        );
     }
 
     @GetMapping("/users")

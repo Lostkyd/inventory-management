@@ -4,6 +4,7 @@ import api from '../Context/Interceptor/GlobalInterceptor';
 
 export const AppContextProvider = ({ children }) => {
     const [auth, setAuth] = useState({
+        email: null,
         token: null,
         role: null,
         firstName: null
@@ -22,6 +23,7 @@ export const AppContextProvider = ({ children }) => {
         api.get('/auth/me')
             .then(response => {
                 setAuth({
+                    email: response.data.email,
                     token: null,
                     role: response.data.role,
                     firstName: response.data.firstName
@@ -31,13 +33,18 @@ export const AppContextProvider = ({ children }) => {
                 if (error.response?.status !== 401) {
                     console.error('Failed to fetch current user:', error);
                 }
-                setAuth({ token: null, role: null, firstName: null });
+                setAuth({ email: null, token: null, role: null, firstName: null });
             })
             .finally(() => setLoading(false));
     }, []);
 
-    const setAuthData = (token, role, firstName) => {
-        setAuth({ token: null, role, firstName });
+    const setAuthData = (email, role, firstName) => {
+        setAuth({
+            email,
+            token: null,
+            role,
+            firstName
+        });
     };
 
     const logout = async () => {
@@ -46,7 +53,7 @@ export const AppContextProvider = ({ children }) => {
         } catch (error) {
             console.error("Logout failed:", error);
         } finally {
-            setAuth({ token: null, role: null, firstName: null });
+            setAuth({ email: null, token: null, role: null, firstName: null });
         }
     };
 
