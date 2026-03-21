@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class ProductController {
         try{
             pRequest = mapper.readValue(productString, ProductRequest.class);
             return productServices.add(pRequest, file);
-        }catch (JsonProcessingException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Exception occured while parsing the json" + e.getMessage());
+        }catch (JacksonException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Exception occurred while parsing the json" + e.getMessage());
         }
     }
 

@@ -12,7 +12,11 @@ import com.codewithronn.inventorymanagement.service.FileUploadServices;
 import com.codewithronn.inventorymanagement.service.ProductServices;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,10 @@ public class ProductServicesImpl implements ProductServices {
     private final FileUploadServices fileUploadServices;
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "products"),
+            @CacheEvict(cacheNames = "publicProducts")
+    })
     public ProductResponse add(ProductRequest productRequest, MultipartFile file) {
         Category category = categoryRepository.findByCategoryId(productRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -51,6 +59,10 @@ public class ProductServicesImpl implements ProductServices {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "products"),
+            @CacheEvict(cacheNames = "publicProducts")
+    })
     public ProductResponse update(String productId, String productData, MultipartFile file) {
         Products product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
@@ -86,15 +98,20 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     @Override
+    @Cacheable(cacheNames = "products")
     public List<ProductResponse> fetchProducts() {
         return productRepository.findAll()
                 .stream()
                 .map(this::toResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "products"),
+            @CacheEvict(cacheNames = "publicProducts")
+    })
     public void deleteProduct(String productId) {
         Products existProduct = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
@@ -107,12 +124,13 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     @Override
+    @Cacheable(cacheNames = "publicProducts")
     public List<PublicProductResponse> fetchAvailablePublicProducts() {
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getProductQuantity() != null && product.getProductQuantity() > 0)
                 .map(this::toPublicResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private PublicProductResponse toPublicResponse(Products product) {
