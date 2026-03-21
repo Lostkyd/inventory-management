@@ -11,8 +11,8 @@ export const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [data, setData] = useState({
-        email: '',
-        password: ''
+        email: "",
+        password: ""
     });
 
     const onChangeLoginHandler = (e) => {
@@ -41,13 +41,16 @@ export const LoginForm = () => {
     };
 
     return (
-        <form className="login-form" onSubmit={onSubmitLoginHandler}>
+        <form className="login-form p-4 rounded" onSubmit={onSubmitLoginHandler}>
             <div className="mb-3">
-                <label className="form-label">Email Address</label>
+                <label className="form-label login-label" htmlFor="email">
+                    Email Address
+                </label>
                 <input
+                    id="email"
                     type="email"
                     name="email"
-                    className="form-control"
+                    className="form-control login-input"
                     placeholder="juandelacruz@gmail.com"
                     onChange={onChangeLoginHandler}
                     value={data.email}
@@ -56,13 +59,16 @@ export const LoginForm = () => {
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Password</label>
+                <label className="form-label login-label" htmlFor="password">
+                    Password
+                </label>
                 <div className="password-field">
                     <input
+                        id="password"
                         type={showPassword ? "text" : "password"}
                         name="password"
-                        className="form-control password-input"
-                        placeholder="••••••••"
+                        className="form-control login-input password-input"
+                        placeholder="Enter your password"
                         onChange={onChangeLoginHandler}
                         value={data.password}
                         required
@@ -77,9 +83,13 @@ export const LoginForm = () => {
                 </div>
             </div>
 
-            <button type="submit" className="btn" disabled={loading}>
-                {loading ? 'Signing in...' : 'Login'}
+            <button
+                type="submit"
+                className="btn login-submit-btn"
+                disabled={loading}
+            >
+                {loading ? "Signing in..." : "Login"}
             </button>
         </form>
     );
-};
+}; 

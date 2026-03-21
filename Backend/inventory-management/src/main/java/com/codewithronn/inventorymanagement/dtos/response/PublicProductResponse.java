@@ -1,5 +1,7 @@
 package com.codewithronn.inventorymanagement.dtos.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,10 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublicProductResponse {
+public class PublicProductResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String productId;
     private String productName;
     private String productDescription;

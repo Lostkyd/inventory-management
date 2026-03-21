@@ -8,7 +8,7 @@ import "./UserList.css";
 
 const UserList = ({ searchTerm, onEdit }) => {
     const queryClient = useQueryClient();
-        const { email, role } = useAuth();
+    const { email, role } = useAuth();
     const { data: users = [], isLoading } = useQuery({
         queryKey: ["users"],
         queryFn: async () => {

@@ -8,7 +8,10 @@ import com.codewithronn.inventorymanagement.repository.ProductRepository;
 import com.codewithronn.inventorymanagement.service.CategoryServices;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ public class CategoryServicesImpl implements CategoryServices {
     private final ProductRepository productRepository;
 
     @Override
+    @CacheEvict(cacheNames = "categories", key = "'all'")
     public CategoryResponse add(CategoryRequest request) {
 
         Category cat = toEntity(request);
@@ -31,15 +35,17 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
+    @Cacheable(cacheNames = "categories", key = "'all'")
     public List<CategoryResponse> read() {
         return categoryRepository.findAll()
                 .stream()
                 .map(this::toResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "categories", key = "'all'")
     public CategoryResponse update(String categoryId, String categoryName) {
 
         Category category = categoryRepository.findByCategoryId(categoryId)
@@ -56,6 +62,7 @@ public class CategoryServicesImpl implements CategoryServices {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "categories", key = "'all'")
     public void delete(String categoryId) {
 
         Category existCategory = categoryRepository.findByCategoryId(categoryId)

@@ -4,6 +4,8 @@
  */
 package com.codewithronn.inventorymanagement.dtos.response;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductResponse {
+public class ProductResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     
     private String productId;
     private String categoryId;

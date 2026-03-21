@@ -2,6 +2,7 @@ spring:
   application:
     name: inventory-management
 
+#Database Configuration
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -17,6 +18,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+#Email SMTP Configuration
   mail:
     host: smtp.gmail.com
     port: 587
@@ -29,6 +31,23 @@ spring:
           starttls:
             enable: true
 
+#Redis Configuration
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10m
+
+  data:
+    redis:
+      client-type: jedis
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
+      timeout: 5s
+      ssl:
+        enabled: ${REDIS_SSL:false}
+
 server:
   servlet:
     context-path: /api/v1
@@ -40,10 +59,12 @@ app:
   cors:
     allowed-origin: http://localhost:5173
 
+#Cloudinary Configuration
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
 
+#JWT Configuration
 jwt:
   secret: ${JWT_SECRET}
