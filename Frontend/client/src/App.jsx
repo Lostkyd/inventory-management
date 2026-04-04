@@ -6,11 +6,12 @@ import Order from './Pages/Admin/Order/Order'
 import InventoryManagement from './Pages/Admin/InventoryManagement/InventoryManagement'
 import UserManagement from './Pages/Admin/UserManagement/UserManagement'
 import LandingPage from './Pages/Landing/LandingPage'
-import AdminRoute from './Components/Routes/AdminRoute'
+import PermissionRoute from './Components/Routes/PermissionRoute'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import { Toaster } from 'react-hot-toast'
+import { PERMISSIONS } from './Constants/constants'
 
 const App = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -31,12 +32,12 @@ const App = () => {
                     <Route path='/' element={<LandingPage />} />
                     <Route path='/landing' element={<LandingPage />} />
 
-                    {/* admin only */}
-                    <Route path='/dashboard' element={<AdminRoute element={<Dashboard />} />} />
-                    <Route path='/category' element={<AdminRoute element={<CategoryManagement />} />} />
-                    <Route path='/users' element={<AdminRoute element={<UserManagement />} />} />
-                    <Route path='/inventory' element={<AdminRoute element={<InventoryManagement />} />} />
-                    <Route path='/order' element={<AdminRoute element={<Order />} />} />
+                    {/* permission-based */}
+                    <Route path='/dashboard' element={<PermissionRoute permission={PERMISSIONS.VIEW_DASHBOARD} element={<Dashboard />} />} />
+                    <Route path='/category' element={<PermissionRoute permission={PERMISSIONS.MANAGE_CATEGORIES} element={<CategoryManagement />} />} />
+                    <Route path='/users' element={<PermissionRoute permission={PERMISSIONS.MANAGE_USERS} element={<UserManagement />} />} />
+                    <Route path='/inventory' element={<PermissionRoute permission={PERMISSIONS.MANAGE_INVENTORY} element={<InventoryManagement />} />} />
+                    <Route path='/order' element={<PermissionRoute permission={PERMISSIONS.MANAGE_ORDERS} element={<Order />} />} />
 
                     {/* catch-all */}
                     <Route path='*' element={<Navigate to='/' />} />
